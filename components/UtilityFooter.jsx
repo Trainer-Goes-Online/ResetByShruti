@@ -12,6 +12,7 @@ export default function UtilityFooter() {
         <Link href="/privacy">Privacy</Link>
         <Link href="/terms">Terms</Link>
         <Link href="/refund-policy">Refund</Link>
+        <Link href="/contact">Contact</Link>
       </div>
       <p className="disclaimer">
         All content, systems and coaching services provided by Reset are intended for educational

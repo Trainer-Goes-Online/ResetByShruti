@@ -5385,3 +5385,117 @@ body.locked { overflow: hidden; }
   .co-page .co-prod-img { flex: 0 0 70px; width: 70px; height: 70px; }
   .co-page .co-pay-btn { font-size: 15.5px; padding: 16px 20px; gap: 10px; }
 }
+
+
+/* ============================================================================
+   LEGAL / POLICY PAGES — light utility surfaces.
+   Long-form reading, so: capped measure, generous leading, real heading
+   hierarchy. No CTA, no countdown, no sticky bar (C13).
+   ========================================================================== */
+.legal { min-height: 100vh; background: var(--bg-alt); display: flex; flex-direction: column; }
+
+.legal-head {
+  background: var(--bg); border-bottom: 1px solid var(--border);
+  padding: 14px var(--wrap-pad);
+}
+.legal-back {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 44px;
+  font-family: var(--fb); font-size: 12px; font-weight: 700;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--brand);
+  text-decoration: none;
+}
+.legal-back-ico { transform: rotate(180deg); stroke-width: 2; }
+
+.legal-main { flex: 1; padding: clamp(28px, 5vw, 56px) 0 60px; }
+.legal-wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 var(--wrap-pad); }
+
+.legal-kicker {
+  font-family: var(--fb); font-size: var(--fs-eyebrow); font-weight: 700;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--brand);
+  margin-bottom: 10px;
+}
+.legal-wrap h1 {
+  font-size: clamp(28px, 5vw, 42px); line-height: 1.14;
+  letter-spacing: -.025em; margin-bottom: 10px;
+}
+.legal-updated { font-size: 13px; color: var(--muted); margin-bottom: 26px; }
+
+/* Entity block — what a Razorpay reviewer looks for first. */
+.legal-entity {
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-m); padding: 20px 22px; margin-bottom: 32px;
+}
+.legal-entity-h {
+  font-family: var(--fb); font-size: 10.5px; font-weight: 700;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--brand);
+  margin-bottom: 12px;
+}
+.legal-entity dl { display: grid; gap: 10px; margin: 0; }
+.legal-entity dl > div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; align-items: start; }
+.legal-entity dt {
+  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  padding-top: 2px;
+}
+.legal-entity dd { margin: 0; font-size: 14.5px; color: var(--ink); line-height: 1.5; }
+.legal-entity a { color: var(--brand); }
+@media (max-width: 520px) {
+  .legal-entity dl > div { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* Body — the measure cap is what makes a 3,000-word policy readable. */
+.legal-body { max-width: 68ch; }
+.legal-body h2 {
+  font-size: clamp(19px, 3vw, 24px); line-height: 1.25;
+  margin: 34px 0 12px; padding-top: 22px; border-top: 1px solid var(--border);
+}
+.legal-body h2:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.legal-body h3 {
+  font-family: var(--fb); font-size: 15px; font-weight: 700;
+  color: var(--ink); margin: 22px 0 8px; letter-spacing: 0;
+}
+.legal-body p { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 14px; }
+.legal-body strong { color: var(--ink); font-weight: 700; }
+.legal-body a { color: var(--brand); text-decoration: underline; text-underline-offset: 2px; }
+.legal-body ul, .legal-body ol { margin: 0 0 16px; padding-left: 20px; }
+.legal-body li { font-size: 15px; line-height: 1.7; color: var(--ink-soft); margin-bottom: 8px; }
+.legal-body li::marker { color: var(--brand); }
+
+/* A clause the reader must not skim past. */
+.legal-note {
+  background: var(--brand-soft);
+  border: 1px solid color-mix(in srgb, var(--brand) 26%, transparent);
+  border-radius: var(--radius-m); padding: 16px 18px; margin: 18px 0 22px;
+}
+.legal-note p { margin-bottom: 8px; color: var(--ink); }
+.legal-note p:last-child { margin-bottom: 0; }
+
+.legal-links {
+  display: flex; flex-wrap: wrap; gap: 4px 20px; margin-top: 40px;
+  padding-top: 22px; border-top: 1px solid var(--border);
+}
+.legal-links a {
+  display: inline-flex; align-items: center; min-height: 44px;
+  font-family: var(--fb); font-size: 12px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--brand); text-decoration: none;
+}
+
+/* Contact page action cards */
+.legal-contact { display: grid; gap: 12px; margin: 24px 0 8px; }
+@media (min-width: 620px) { .legal-contact { grid-template-columns: 1fr 1fr; } }
+.legal-cc {
+  display: flex; align-items: flex-start; gap: 12px;
+  background: var(--bg); border: 1px solid var(--border);
+  border-radius: var(--radius-m); padding: 18px; text-decoration: none;
+  transition: border-color .25s, transform .25s var(--ease-btn);
+}
+.legal-cc:hover { border-color: color-mix(in srgb, var(--brand) 45%, transparent); transform: translateY(-2px); }
+.legal-cc-ic {
+  flex: 0 0 34px; width: 34px; height: 34px; border-radius: 50%;
+  display: grid; place-items: center; color: var(--brand);
+  background: var(--brand-soft);
+  border: 1px solid color-mix(in srgb, var(--brand) 26%, transparent);
+}
+.legal-cc-t { display: block; font-weight: 700; color: var(--ink); font-size: 15px; }
+.legal-cc-s { display: block; margin-top: 3px; font-size: 13.5px; color: var(--ink-soft); }

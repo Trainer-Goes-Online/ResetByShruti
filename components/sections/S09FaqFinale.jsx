@@ -103,6 +103,8 @@ export default function S09FaqFinale() {
       <Link href="/terms">Terms &amp; Conditions</Link>
       <span aria-hidden="true">·</span>
       <Link href="/refund-policy">Refund Policy</Link>
+      <span className="foot-sep">·</span>
+      <Link href="/contact">Contact Us</Link>
       {CONFIG.INSTAGRAM_URL && (
         <>
           <span aria-hidden="true">·</span>

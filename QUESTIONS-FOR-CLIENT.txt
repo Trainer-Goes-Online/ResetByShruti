@@ -405,8 +405,74 @@ QX.4    Instagram handle and any other social links for the footer.
 QX.5    Do you want Meta Pixel and/or Google Analytics installed? If yes, the
         IDs.
 
+
 ================================================================================
-END — 47 questions. The 11 marked ★★ and ★ under §13, §15, §6, §18 and §7 are
+LEGAL PAGES / RAZORPAY MERCHANT VERIFICATION  (new — blocks the API keys)
+================================================================================
+Razorpay's team reads the policy pages manually and cross-checks them against
+the entity on the account. A mismatch is the most common reason an application
+is sent back. Every item below renders as a visible gap on the live pages until
+you answer it.
+
+QL.1 ★★ REGISTERED BUSINESS NAME — exactly as it appears on the Razorpay
+        account and on your PAN/GST registration. If Shruti trades as an
+        individual (sole proprietor), that is fine — we need the legal name and
+        the proprietorship name if there is one.
+
+QL.2 ★★ REGISTERED BUSINESS ADDRESS — full postal address with PIN code. This
+        must match the address on the Razorpay account.
+
+QL.3 ★  SUPPORT PHONE NUMBER for the contact page. Can be the same WhatsApp
+        number (+91 88001 56081) — confirm whether that number takes voice calls
+        or is WhatsApp-only, so we label it correctly.
+
+QL.4 ★★ GRIEVANCE OFFICER — a named person. Required by the Consumer Protection
+        (E-Commerce) Rules 2020 and the DPDP Act 2023. It can be Shruti herself.
+        We need: name, and whether to publish a separate email or reuse
+        shrutisouls18@gmail.com.
+
+QL.5 ★  JURISDICTION — which city's courts govern disputes? Normally where the
+        business is registered.
+
+QL.6    GSTIN — if registered. If not GST-registered, say so and we omit the
+        field entirely rather than leaving a blank.
+
+QL.7 ★★ Is the business a SOLE PROPRIETORSHIP, a PARTNERSHIP, an LLP or a
+        PRIVATE LIMITED company? This changes the wording in the Terms and
+        determines which documents Razorpay asks for.
+
+QL.8 ★  Do you want a dedicated support email (e.g. support@yourdomain.com)
+        instead of the personal Gmail? Razorpay accepts Gmail, but a
+        domain-based address materially improves approval odds and looks more
+        credible on a page asking for payment.
+
+QL.9 ★★ CONFIRM THE PROGRAMME REFUND POSITION IN WRITING. The refund policy now
+        states that the 12-week programme is non-refundable once you enrol, with
+        the reason given (the plan is individually built and capacity reserved).
+        You previously asked that this not be mentioned — that instruction is
+        honoured on every SALES page, and none of them mentions it.
+        It cannot be left off the refund policy itself, because:
+          - Razorpay will reject a policy that omits the main product's terms
+          - the Consumer Protection (E-Commerce) Rules require refund terms to
+            be clearly displayed before purchase
+          - undisclosed terms are unenforceable in a chargeback, so stating it
+            protects you rather than exposing you
+        Please confirm the wording is accurate, or send the terms you want.
+
+QL.10 ★ REFUND PROCESSING WINDOW (also Q18.2) — how many working days from
+        request to money back? Razorpay expects a stated timeframe.
+
+QL.11   Do you have a DOMAIN yet (QX.3)? Razorpay verification requires the
+        policy pages to be live on the domain you register, not on a preview
+        URL. This is usually the last blocker.
+
+QL.12   MEDICAL SCOPE — is Shruti a registered dietitian / licensed
+        practitioner? (Also Q20.4.) The Terms currently state this is nutrition
+        and lifestyle coaching and NOT medical treatment. If she holds a
+        clinical registration, the wording should change to reflect it.
+
+================================================================================
+END — 59 questions. The starred items marked ★★ and ★ under §13, §15, §6, §18 and §7 are
 the ones that actually block publication. Everything else refines a page that
 will already be structurally complete.
 ================================================================================
