@@ -1,0 +1,428 @@
+================================================================================
+RESET by Shruti Solanki — VSL FUNNEL
+QUESTIONS FOR THE CLIENT
+================================================================================
+Forward this file to Shruti as-is.
+
+Every question below exists because the funnel copy needs a FACT we are not
+allowed to invent — a number, a name, a credential, a refund term, a date.
+Anything we could reasonably draft (positioning, narrative, FAQ wording) has
+already been written; we are not asking about those.
+
+★ = highest value. Answer these first; they unblock whole sections.
+
+Sections are numbered to match the landing page (§1–§20), then the three
+post-payment pages.
+
+--------------------------------------------------------------------------------
+ALREADY ANSWERED — no action needed (recorded here so nothing gets re-asked)
+--------------------------------------------------------------------------------
+  - Entry price: Rs.97, refundable.
+  - Refund terms: the Rs.97 is refunded if the call does not happen (either
+    side) or if she finishes the call and was not satisfied. The 12-week
+    programme itself is non-refundable and this is NOT mentioned on the page.
+  - Programme duration: 12 weeks / 90 days.
+  - The call is 30 minutes, 1:1 with Shruti herself.
+  - Scheduler: Calendly - https://calendly.com/shrutisouls18/30min
+  - Reschedule: emergencies only.
+  - VSL will be supplied as a Vimeo link.
+  - Video testimonial clients are Hima, Shirley and Arya.
+
+================================================================================
+§2 — THE CREDENTIAL STRIP (4 signals above the fold)
+================================================================================
+Q2.1 ★  How many years has Shruti been coaching clients? We need a single
+        number for "N+ Years Coaching". If it is under 3 years we will drop
+        this signal rather than show a weak one.
+
+Q2.2    Is there a public star rating anywhere with a real review count behind
+        it — Google Business, Instagram, Trustpilot, a testimonial platform?
+        If yes: the rating AND the number of reviews. If there is no real
+        rating, say so and we cut it. We will not display a rating that isn't
+        backed by countable reviews.
+
+================================================================================
+§3 — THE HERO HEADLINE
+================================================================================
+Q3.1 ★  What is the honest weight-loss range a typical Reset client sees in 90
+        days? Not the best case — the range most clients land in.
+        The headline slot is: "Lose ___ to ___ kilos in 90 days".
+        From the five transformation stories the losses were 9 kg, 6 kg,
+        5.15 kg, 4.75 kg and 3.6 kg — which would support something like
+        "4-9 kilos". Please confirm or correct, because this is the single
+        most-read line on the page.
+
+Q3.2    Is there a second outcome that matters more to your clients than kilos
+        — markers coming back into range, periods returning, energy? We have
+        drafted "bring your markers back into range". Confirm or replace.
+
+================================================================================
+§4 — THE REACH LINE ("300+ women across ___")
+================================================================================
+Q4.1 ★  Of the 300+ clients, which countries and/or cities have they actually
+        come from? We need this to be literally true. The strategy document
+        mentions Boston and Canada as INCOMING LEADS, not clients, so we have
+        not used them. If all 300+ are in India, say so and we will write
+        "300+ women across India" — that is still strong.
+
+Q4.2    Is "300+" current? If the real number is now higher, give us today's
+        figure and the date you counted it.
+
+================================================================================
+§6 — THE VSL (the video at the top of the page)
+================================================================================
+Q6.1 ★  The Vimeo link for the VSL, once recorded.
+
+Q6.2 ★  A poster still for the VSL — one frame, ideally Shruti looking at
+        camera, at least 1280px wide. Without it the video frame sits blank
+        until it loads, which loses viewers at the most important moment on
+        the page. (We can pull Vimeo's own auto-thumbnail as a fallback, but a
+        chosen frame is always better.)
+
+Q6.3    VSL SCRIPT BRIEF — the video has to do four jobs, in this order:
+          1. Name her exactly: "you're eating clean, walking, and the scale
+             hasn't moved in months."
+          2. Take the blame off her: past plans failed because each one treated
+             ONE of PCOS / thyroid / insulin resistance and left the other two
+             running.
+          3. Explain the overlap and the four-week sequence — gut first, then
+             a small deficit, then more protein and fiber, then reintroduce.
+          4. Tell her the next step is a 30-minute Rs.97 call, refundable.
+        Recommended length 4-8 minutes. Plain, direct to camera, no production.
+        Please confirm this brief before recording.
+
+================================================================================
+§7 — THE COUNTDOWN TIMER  (needs a decision, not just an answer)
+================================================================================
+Q7.1 ★  The reference funnels all run a countdown next to the button. A timer
+        that resets every time the page reloads is fake scarcity and we will
+        not build one. So — pick ONE:
+          (a) There is a REAL deadline (a cohort start date, a price rise on a
+              specific date). Give us the date and time.
+          (b) There is a REAL monthly intake cap. How many new clients does
+              Shruti take per month, and how many slots are left this month?
+              We would then show "N new clients a month" instead of a clock.
+          (c) Neither is real → we cut the timer entirely. This is a completely
+              acceptable outcome; one of the three reference funnels does the
+              same.
+        Our recommendation is (b) if a real cap exists, otherwise (c).
+
+================================================================================
+§8 — THE FOUR STAT CARDS
+================================================================================
+Q8.1 ★  The strategy document claims an "80-85% success rate". We cannot
+        publish that without a definition. What counts as a success?
+          - Lost a target amount of weight? How much?
+          - Improved a marker (TSH, HbA1c)?
+          - Completed the programme?
+          - Self-reported satisfaction?
+        And out of how many clients was it measured? If it cannot be defined
+        and counted, we will cut it — an undefined success rate on a health
+        page is the kind of claim that attracts complaints.
+
+Q8.2    Number of countries clients have come from (this fills the third stat
+        card, and follows from Q4.1).
+
+================================================================================
+§9 — WHAT THE Rs.97 BUYS
+================================================================================
+Q9.1    Confirmed: the call is 1:1 with Shruti herself, 30 minutes. No further
+        action — recorded here so it is not re-asked.
+
+Q9.2    Does the client receive anything IN WRITING after the call — a written
+        roadmap, a summary, a plan document? If yes, what is it called and
+        what is in it? This matters because the CTA repeated 4-9 times down
+        the page promises a "90-Day Reset Roadmap", and she should actually
+        receive something matching that name.
+
+================================================================================
+§13 — TESTIMONIALS  (the highest-value section in this file)
+================================================================================
+Q13.1 ★★ VIDEO MAPPING. We have three video files and three names — Hima,
+        Shirley and Arya — but no way to tell which is which. Please match:
+          File "video-output-BC1A520F-...-1.mp4"  (2 min 05 s, portrait) = ?
+          File "IMG_0318.mp4"                     (1 min 22 s, portrait) = ?
+          File "Video-Testimonial1.MP4"           (2 min 15 s, portrait) = ?
+
+Q13.2 ★★ For Hima, Shirley and Arya individually — they are NOT in the
+        transformation stories document, so we have no details at all:
+          - Age
+          - Profession
+          - City
+          - Which conditions (PCOS / thyroid / insulin resistance / other)
+          - Their hard result (start weight to end weight, inches, TSH,
+            HbA1c, periods returning — whatever is true and measurable)
+          - Written permission to use the video publicly on a website and in
+            paid ads
+        Without these the three videos ship as unlabelled players, which is
+        weaker proof than the five written stories we already have.
+
+Q13.3 ★  From the five written transformation stories we are missing the CITY
+        for four of them. Please supply:
+          - Simran Jha (25, corporate communications) — city?
+          - Adithi (27, PhD scholar) — city?
+          - Urvashi (25, psychologist) — city?
+          - Devika (25) — profession AND city?
+        (Sneha Vaswendra, 26, corporate lawyer, Faridabad is complete.)
+        Name + age + profession + city is the attribution pattern all three
+        reference funnels use. A testimonial missing it reads as invented.
+
+Q13.4 ★  TWO NUMBER CONFLICTS in the transformation stories document that we
+        cannot resolve ourselves:
+          (a) SNEHA — her stats block says starting waist 45 inches, but the
+              narrative says "waist reduced to 40.5 from 46 inches". Which is
+              correct, 45 or 46? And is her final waist 40 or 40.5?
+          (b) SIMRAN — the narrative says she started at 93 kg, the stats
+              block says 95 kg. Which is correct?
+
+Q13.5 ★  Written consent from all five (Sneha, Simran, Adithi, Urvashi,
+        Devika) to publish their first name, age, profession, city and
+        numbers on a public website and in paid advertising. If any of them
+        will only allow a first name, tell us and we will run just the first
+        name for that person.
+
+Q13.6   Are any of the direct quotes in the transformation document things the
+        clients actually SAID, in their own words? If yes, which ones — we can
+        only publish something in quotation marks if she really said it. If
+        they were written up by your team, we will present them as case
+        summaries instead of quotes.
+
+================================================================================
+§14 — THE CHAT SCREENSHOT WALL
+================================================================================
+Q14.1 ★  We have 14 chat screenshots. Before these can be published:
+          - Do you have consent from each client to show their messages?
+          - Any of the 14 you want EXCLUDED?
+        We will blur or crop phone numbers, display names, profile photos and
+        anything else identifying — but consent is yours to obtain, not ours.
+
+Q14.2   Some screenshots are long and some are short. Is there an order you
+        want them in, or should we lead with the strongest ones?
+
+================================================================================
+§15 — SHRUTI'S OWN STORY  (this section is currently completely empty)
+================================================================================
+The strategy document has a great deal about the programme and nothing at all
+about Shruti. All three reference funnels lead this section with the coach's
+OWN transformation number, before any qualification — and in all three the
+personal number does more work than the certificate. We cannot write any of
+this; it is biography, and biography is either true or it is fabrication.
+
+Q15.1 ★★ Does Shruti have her own health story? Did she have PCOS, thyroid,
+        insulin resistance, or a weight struggle herself? If yes — what was
+        it, what were the numbers, and how long did it take her to sort it
+        out? This is the single most valuable answer in this section.
+
+Q15.2 ★  What are her formal qualifications? Degrees, certifications, the
+        institutions, and the years. Exact titles please.
+
+Q15.3 ★  How long has she been doing this, and what did she do before?
+
+Q15.4   Why did she start working specifically with PCOS and thyroid women
+        rather than general weight loss? What was the moment or the client
+        that turned it into a specialism?
+
+Q15.5   Any media features, podcast appearances, speaking, published writing,
+        or professional affiliations? Only real ones with a link.
+
+Q15.6 ★  A good photograph of Shruti for this section. We have two portraits
+        in the assets folder — please confirm they are of Shruti and that we
+        may use them, or send a better one.
+
+================================================================================
+§16 — THE MECHANISM NAME
+================================================================================
+Q16.1 ★  We have named the method "THE OVERLAP METHOD", because the whole
+        positioning is that PCOS, thyroid and insulin resistance are one
+        problem rather than three. This name will appear throughout the page,
+        in the ads, and on the call. Please approve it, or pick:
+          (a) The Overlap Method     [our recommendation]
+          (b) The Overlap Reset
+          (c) The Hormone-First Sequence
+          (d) Something in Shruti's own words
+
+Q16.2   In week 1, is seed cycling given to every PCOS client or only some? We
+        have written it as standard for PCOS clients — correct if wrong.
+
+Q16.3   Same question for spearmint tea, and for the Brazil nuts / selenium
+        protocol for thyroid clients.
+
+================================================================================
+§17 — WHAT'S INCLUDED IN THE 12 WEEKS
+================================================================================
+Q17.1 ★  The weekly WhatsApp check-in — is it with Shruti, or with her team
+        with Shruti stepping in when needed? The strategy document says the
+        team, which contradicts the call being 1:1 with Shruti. Please state
+        exactly who the client talks to week to week, because a client who
+        expects Shruti and gets a team member will ask for a refund.
+
+Q17.2   Are the at-home workout videos a library the client gets access to, or
+        are they assigned per client per week?
+
+Q17.3   Is the Notion progress tracker something the client can see and log
+        into, or an internal tool your team uses? "You get a progress log" and
+        "we keep a progress log" are different promises.
+
+Q17.4   Is the optional weekly call included at no extra cost for all clients,
+        or only on certain plans?
+
+Q17.5   Is there any onboarding call, welcome pack or starter document at the
+        beginning of the 12 weeks that we have not listed?
+
+================================================================================
+§18 — THE 14-DAY PROMISE  (contractual — please read carefully)
+================================================================================
+Q18.1 ★★ The strategy document words the 14-day promise as:
+          "Feel lighter ... within the first 14 days, OR YOUR MONEY BACK."
+        You have separately told us the 12-week programme is non-refundable
+        and only the Rs.97 is refundable. Those two statements cannot both be
+        published.
+
+        We have written the page the way The Food Freedom Co does it — as a
+        PROMISE, with no money attached:
+          "In the first fourteen days you will feel lighter - less bloating,
+           less puffiness, rings and shoes that stop being tight."
+        and kept the money-back strictly on the Rs.97 booking fee.
+
+        Please confirm this is correct. If Shruti DOES intend to refund the
+        programme fee when someone does not feel lighter in 14 days, we need
+        the exact terms in writing: what triggers it, what window, how much is
+        returned, and what evidence is required.
+
+Q18.2   For the Rs.97 refund — how quickly is it returned, and by what route
+        (back to the original Razorpay payment)? The page should state the
+        timeframe: "within N working days".
+
+================================================================================
+§20 — FOOTER, LEGAL AND MEDICAL DISCLAIMER
+================================================================================
+Q20.1 ★  The medical disclaimer needs a legal read before this page goes live.
+        Our draft: "Reset is a nutrition and lifestyle coaching programme, not
+        medical treatment. PCOS and thyroid conditions are managed, not cured.
+        Nothing here replaces your doctor's advice, and no medication should
+        be changed without them. Results vary."
+        Please have this checked and confirm or amend.
+
+Q20.2   Do Privacy Policy, Terms and Refund Policy pages exist? If yes, the
+        URLs. If no, they need writing — the footer links to all three and
+        Razorpay requires them.
+
+Q20.3   Registered business name and address for the copyright line and for
+        the Razorpay account.
+
+Q20.4   Is Shruti a registered dietitian / licensed practitioner in India? The
+        answer changes what we are allowed to claim about markers such as TSH
+        and HbA1c.
+
+================================================================================
+CHECKOUT PAGE
+================================================================================
+QC.1    Razorpay account confirmed live and able to take Rs.97 payments? We
+        need the key or the payment-page link.
+
+QC.2    What should the product be called on the receipt and the bank
+        statement? Currently "The Reset Hormone Diagnosis Call".
+
+QC.3    Do you want GST added or is Rs.97 the final amount paid?
+
+================================================================================
+BOOK-A-CALL PAGE
+================================================================================
+QB.1 ★  Confirmed: Calendly https://calendly.com/shrutisouls18/30min, 30
+        minutes, reschedule for emergencies only. Two follow-ups:
+          (a) Is the Calendly event set to collect the same email and phone
+              they entered at checkout, so bookings can be matched to
+              payments?
+          (b) What are Shruti's actual available hours, and in which timezone?
+              We display "all times in your local zone" and want it accurate.
+
+QB.2 ★  WhatsApp number and support email address. These go into a fallback
+        box directly under the Calendly embed, for the guaranteed situation
+        where the widget shows no slots, is blocked, or fails to load. Without
+        a human route there, a failed embed is a dead end at the exact moment
+        she has already paid.
+
+QB.3    Which platform is the call on — Zoom, Google Meet, WhatsApp video? The
+        page tells her where the link will arrive.
+
+QB.4    "Reschedule for emergencies only" — how does she request one, and to
+        which contact? We must state the route or she will simply not show up.
+
+QB.5    Do you have any data on how many people pay and never book? If yes,
+        the real percentage. If you have no data, say so — we will not invent
+        a statistic, we will use the intake cap from Q7.1 instead.
+
+================================================================================
+THANK-YOU PAGE
+================================================================================
+QT.1    Is there a WhatsApp channel where she should message you straight
+        after booking? The page includes a 30-second "do one thing right now"
+        step, which lifts show-up rates significantly, but it needs a real
+        destination.
+
+QT.2    What emails or messages does she actually receive after booking, and
+        how quickly? We list: calendar invite within 5 minutes, prep message
+        within 24 hours, reminder one hour before. Confirm this is what your
+        system genuinely sends, because promising an email that never arrives
+        costs you the call.
+
+QT.3    Is there anything you want her to bring or prepare — recent blood
+        reports, a food diary, her current medication list?
+
+QT.4    Does Shruti want to record a short welcome video for the thank-you
+        page? TeamFitArjun runs one there and it is the single best show-up
+        lever on that page — the coach's face, 60-90 seconds, "here is what
+        will happen on our call and how to come prepared." We have no such
+        asset, so the video frame is currently omitted rather than shipped as
+        an empty box. If yes, we need the file or a Vimeo link.
+
+QT.5    Does Shruti want a PRE-CALL INTAKE FORM on the thank-you page?
+        TeamFitArjun runs a 10-question diagnostic there as a modal — age,
+        current weight, how long they have been stuck, what they have tried,
+        what they want — submitted straight after payment so the coach opens
+        the call already holding the context. It is worth real money on a
+        30-minute slot: without it she spends the first ten minutes taking a
+        history. This is a product decision, not a design one, so we have not
+        built it. Rough scope if she wants it: 8-10 questions, one per screen
+        with a progress bar, answers delivered to email/Sheets/CRM, roughly a
+        day of build plus whatever wiring the destination needs. Questions
+        would have to come from Shruti — a diagnostic intake is clinical
+        content and is never drafted for her.
+
+================================================================================
+BRAND AND TECHNICAL
+================================================================================
+QX.1 ★  Logo file — SVG preferred, or a transparent PNG at 1000px+. It needs
+        to work on both a light cream and a dark green background.
+
+QX.2    Brand colours, if any are already fixed. Otherwise we use the house
+        wellness palette (deep green, warm cream, gold).
+
+QX.3 ★  What domain will this live on?
+
+QX.4    Instagram handle and any other social links for the footer.
+
+QX.5    Do you want Meta Pixel and/or Google Analytics installed? If yes, the
+        IDs.
+
+================================================================================
+END — 47 questions. The 11 marked ★★ and ★ under §13, §15, §6, §18 and §7 are
+the ones that actually block publication. Everything else refines a page that
+will already be structurally complete.
+================================================================================
+
+QC.4    Do you have (or want) discount/coupon codes for the Rs.97 booking fee?
+        ARJ's checkout carries an "Apply code" control. We have NOT built it:
+        a coupon box with no valid codes is a dead control that tells the buyer
+        a better price exists somewhere and sends her off to look for it. Say
+        the word and it is ~30 minutes of work.
+
+QC.5    Confirm we may use your photo (public/img/coach/shruti-1.jpg) as the
+        product thumbnail in the checkout order summary. ARJ uses a product
+        graphic there; the product here is 30 minutes with YOU, so your face is
+        the honest thumbnail. If you'd rather we used a graphic, send one at
+        512x512 or larger.
+
+QC.6    The country selector loads flag images from flagcdn.com (a third-party
+        CDN, same as ARJ). Confirm that is acceptable, or we self-host the ~33
+        flags we ship.

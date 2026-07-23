@@ -1,0 +1,322 @@
+'use client';
+
+import { useEffect } from 'react';
+import { CONFIG } from '@/lib/config';
+
+/* ============================================================================
+   All funnel behaviour, mounted ONCE at the page root.
+
+   Why event delegation on the document rather than per-component state:
+   every section is a SERVER component, so the markup is real HTML before any
+   JS runs. That is what makes the reveals genuinely fail-open (C7) — if this
+   file never executes, the page is still complete and every CTA still works.
+
+   Build-time rules honoured here (shape.md · Build-time gotchas):
+     · never setState or read a ref's .current during render — everything is
+       inside useEffect
+     · rAF loops bail on document.hidden so they don't burn cycles or desync
+     · the overlay is moved to document.body, never given a bigger z-index
+   ========================================================================== */
+export default function FunnelEffects() {
+  useEffect(() => {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const $ = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+    const cleanups = [];
+
+    /* ---------------------------------------------------- REVEAL (fail-open)
+       The element is VISIBLE from the server. We add `.armed` to <body> only
+       now, which is what actually applies opacity:0 — so content can never get
+       stuck blank waiting on an observer that may never fire. Revealed on the
+       FIRST of: intersection, already-above-fold, or a rAF sweep catching
+       content already scrolled past (anchor jumps / restored scroll). */
+    const revealEls = $$('.reveal');
+    if (revealEls.length && !reduced && 'IntersectionObserver' in window) {
+      document.body.classList.add('armed');
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+          });
+        },
+        { rootMargin: '0px 0px -8% 0px', threshold: 0.02 }
+      );
+      revealEls.forEach((el) => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 1.05) el.classList.add('in');
+        else io.observe(el);
+      });
+      requestAnimationFrame(() => {
+        revealEls.forEach((el) => {
+          if (el.getBoundingClientRect().top < window.innerHeight) el.classList.add('in');
+        });
+      });
+      cleanups.push(() => { io.disconnect(); document.body.classList.remove('armed'); });
+    }
+
+    /* ------------------------------------------------------------- COUNT-UP
+       The real value is already in the HTML, so a failed animation leaves the
+       correct number on screen — never a zero. */
+    const counters = $$('[data-count]');
+    if (counters.length && !reduced && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            io.unobserve(e.target);
+            const el = e.target;
+            const target = parseFloat(el.dataset.count);
+            const suffix = el.dataset.suffix || '';
+            if (Number.isNaN(target)) return;
+            const start = performance.now();
+            const tick = (now) => {
+              if (document.hidden) { el.textContent = target + suffix; return; }
+              const p = Math.min((now - start) / 1300, 1);
+              el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3))) + suffix;
+              if (p < 1) requestAnimationFrame(tick);
+            };
+            requestAnimationFrame(tick);
+          });
+        },
+        { threshold: 0.4 }
+      );
+      counters.forEach((el) => io.observe(el));
+      cleanups.push(() => io.disconnect());
+    }
+
+    /* ------------------------------------------------------------------ FAQ
+       R4/C6 — the CSS does the physical part (wash + stripe + indent + icon
+       rotate). This only flips the class and ARIA. */
+    const onFaq = (e) => {
+      const btn = e.target.closest('.qa .q');
+      if (!btn) return;
+      const qa = btn.closest('.qa');
+      const open = qa.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    };
+    document.addEventListener('click', onFaq);
+    cleanups.push(() => document.removeEventListener('click', onFaq));
+
+    /* -------------------------------------------------- ORDER SUMMARY (R11) */
+    /* The summary is only collapsible when it actually ships a toggle bar. The
+       reference checkout renders it as an open panel, so on that layout there
+       is no bar — guard rather than assume, or the whole effects file throws
+       and takes every other behaviour on the page down with it. */
+    const summary = $('#summary');
+    const summaryBar = summary && $('.summary-bar', summary);
+    if (summary && summaryBar) {
+      if (window.innerWidth >= 860) summary.classList.add('is-open');
+      const onSum = () => {
+        const open = summary.classList.toggle('is-open');
+        summaryBar.setAttribute('aria-expanded', String(open));
+      };
+      summaryBar.addEventListener('click', onSum);
+      cleanups.push(() => summaryBar.removeEventListener('click', onSum));
+    }
+
+    /* -------------------------------------------------------- LIGHTBOX (C15)
+       The node is authored in the layout at the page root. We defensively
+       re-parent to <body> — an overlay inside a decorated section is trapped
+       by that section's stacking context and painted over by page chrome. The
+       fix is always to MOVE the node, never to raise the z-index. */
+    const ov = $('#lightbox');
+    if (ov) {
+      if (ov.parentElement !== document.body) document.body.appendChild(ov);
+      const slot = $('.overlay-inner', ov);
+      let lastFocus = null;
+
+      const close = () => {
+        ov.classList.remove('open');
+        document.body.classList.remove('locked');
+        slot.replaceChildren();
+        if (lastFocus) { try { lastFocus.focus(); } catch {} }
+      };
+      const open = (node) => {
+        lastFocus = document.activeElement;
+        slot.replaceChildren(node);
+        ov.classList.add('open');
+        document.body.classList.add('locked');
+        $('.overlay-close', ov)?.focus();
+      };
+
+      const onOpen = (e) => {
+        const vid = e.target.closest('[data-video]');
+        if (vid) {
+          const v = document.createElement('video');
+          v.src = vid.dataset.video;
+          v.controls = true; v.autoplay = true; v.playsInline = true; v.preload = 'metadata';
+          open(v);
+          return;
+        }
+        const img = e.target.closest('[data-img]');
+        if (img) {
+          const i = document.createElement('img');
+          i.src = img.dataset.img;
+          i.alt = img.dataset.alt || 'Client message';
+          open(i);
+        }
+      };
+      const onKey = (e) => { if (e.key === 'Escape' && ov.classList.contains('open')) close(); };
+
+      document.addEventListener('click', onOpen);
+      document.addEventListener('keydown', onKey);
+      $('.overlay-close', ov).addEventListener('click', close);
+      $('.overlay-bg', ov).addEventListener('click', close);
+      cleanups.push(() => {
+        document.removeEventListener('click', onOpen);
+        document.removeEventListener('keydown', onKey);
+      });
+    }
+
+    /* ------------------------------------------------------ STICKY CTA (R8)
+       Hidden until past the hero; hides again at the final CTA so it never
+       duplicates a CTA the user can already see. */
+    const bar = $('#stickycta');
+    const hero = $('#hero');
+    if (bar && hero) {
+      document.body.classList.add('has-sticky');   // reserve its height
+      const finale = $('#finale');
+      let ticking = false;
+      const update = () => {
+        const pastHero = hero.getBoundingClientRect().bottom < 0;
+        const atFinale = finale ? finale.getBoundingClientRect().top < window.innerHeight * 0.9 : false;
+        bar.classList.toggle('in', pastHero && !atFinale);
+      };
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => { update(); ticking = false; });
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      update();
+      cleanups.push(() => {
+        window.removeEventListener('scroll', onScroll);
+        document.body.classList.remove('has-sticky');
+      });
+    }
+
+    /* -------------------------------------------- JOURNEY SPINE (R9 · heavy)
+       The rail fill and glowing head track scroll progress; each node ignites
+       as the head reaches it. The page's one heavy moment. */
+    const spine = $('#spine');
+    if (spine) {
+      const rows = $$('.stagerow', spine);
+      if (reduced) {
+        rows.forEach((r) => r.classList.add('lit'));
+      } else {
+        let ticking = false;
+        const update = () => {
+          if (document.hidden) return;
+          const box = spine.getBoundingClientRect();
+          const anchor = window.innerHeight * 0.55;
+          const fill = Math.max(0, Math.min(1, (anchor - box.top) / box.height));
+          spine.style.setProperty('--fill', fill.toFixed(4));
+          spine.style.setProperty('--headop', fill > 0.001 && fill < 0.999 ? '1' : '0');
+          rows.forEach((row) => row.classList.toggle('lit', row.getBoundingClientRect().top < anchor + 40));
+        };
+        const onScroll = () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(() => { update(); ticking = false; });
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', update, { passive: true });
+        update();
+        cleanups.push(() => {
+          window.removeEventListener('scroll', onScroll);
+          window.removeEventListener('resize', update);
+        });
+      }
+    }
+
+    /* ------------------------------------------ VSL · one-gesture play (C16)
+       The poster hands the play intent THROUGH: the first tap swaps in the
+       iframe with autoplay + inline already injected into the src. Two taps
+       (tap poster, then hunt the widget's own button) is where hook momentum
+       dies. The frame's aspect is reserved in CSS so it can't land at 0px. */
+    const frame = $('#vslframe');
+    if (frame && CONFIG.VSL_VIMEO_URL) {
+      const ph = $('.vsl-ph', frame);
+      if (ph) {
+        ph.style.cursor = 'pointer';
+        ph.setAttribute('role', 'button');
+        ph.setAttribute('tabindex', '0');
+        $('.ph-note', ph)?.remove();
+        const play = () => {
+          const url = CONFIG.VSL_VIMEO_URL;
+          const sep = url.includes('?') ? '&' : '?';
+          const f = document.createElement('iframe');
+          f.src = `${url}${sep}autoplay=1&playsinline=1&title=0&byline=0&portrait=0`;
+          f.allow = 'autoplay; fullscreen; picture-in-picture';
+          f.setAttribute('allowfullscreen', '');
+          f.title = 'Watch the Reset video';
+          frame.appendChild(f);
+          ph.style.display = 'none';
+        };
+        ph.addEventListener('click', play);
+        ph.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
+        });
+      }
+    }
+
+    /* --------------------------------------------------- COUNTDOWN (3-HOUR)
+       The reference funnels run a 3-hour "OFFER ENDS IN HH : MM : SS" clock
+       inside every CTA block, and it restarts on every page load. Ours keeps
+       the same 3-hour window and the same HRS/MIN/SEC anatomy, but anchors the
+       deadline in sessionStorage — so it counts down continuously across a
+       visit instead of resetting each time she scrolls back or reloads.
+       A real deadline or intake cap in config overrides it. */
+    const urgencyHosts = $$('[data-urgency]');
+    if (urgencyHosts.length) {
+      const paint = (txt) => urgencyHosts.forEach((host) => {
+        host.style.display = '';
+        const t = $('.u-text', host);
+        if (t) t.textContent = txt;
+      });
+
+      if (CONFIG.MONTHLY_INTAKE_CAP) {
+        paint(`Only ${CONFIG.MONTHLY_INTAKE_CAP} new clients taken each month`);
+      } else {
+        const WINDOW_MS = 3 * 60 * 60 * 1000;
+        let end;
+        if (CONFIG.COUNTDOWN_DEADLINE) {
+          end = new Date(CONFIG.COUNTDOWN_DEADLINE).getTime();
+        } else {
+          const KEY = 'reset_cd_end';
+          const stored = Number(sessionStorage.getItem(KEY));
+          end = stored && stored > Date.now() ? stored : Date.now() + WINDOW_MS;
+          try { sessionStorage.setItem(KEY, String(end)); } catch {}
+        }
+
+        const pad = (n) => String(n).padStart(2, '0');
+        const tick = () => {
+          const left = end - Date.now();
+          if (left <= 0) { paint('00 Hrs : 00 Min : 00 Sec'); return; }
+          const h = Math.floor(left / 36e5);
+          const m = Math.floor((left % 36e5) / 6e4);
+          const sec = Math.floor((left % 6e4) / 1000);
+          paint(`${pad(h)} Hrs : ${pad(m)} Min : ${pad(sec)} Sec`);
+        };
+        tick();
+        const id = setInterval(tick, 1000);
+        cleanups.push(() => clearInterval(id));
+      }
+    }
+
+    /* ------------------------------------------------------- CALENDLY (C16) */
+    const cal = $('#calendly');
+    if (cal && CONFIG.CALENDLY_URL && !cal.querySelector('iframe')) {
+      const url = CONFIG.CALENDLY_URL;
+      const sep = url.includes('?') ? '&' : '?';
+      const f = document.createElement('iframe');
+      f.src = `${url}${sep}hide_gdpr_banner=1`;
+      f.title = 'Book your call with Shruti';
+      f.loading = 'lazy';
+      cal.appendChild(f);
+    }
+
+    return () => cleanups.forEach((fn) => fn());
+  }, []);
+
+  return null;
+}
