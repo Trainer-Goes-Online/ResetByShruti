@@ -3,6 +3,7 @@ import './globals.css';
 import Icons from '@/components/Icons';
 import Lightbox from '@/components/Lightbox';
 import FunnelEffects from '@/components/FunnelEffects';
+import { CONFIG } from '@/lib/config';
 
 /* C1 · three voices. display = emotion & authorship · mono = spec/precision ·
    sans = neutral body. Loaded through next/font so they are self-hosted and
@@ -20,10 +21,32 @@ const inter = Inter({
   variable: '--f-sans', display: 'swap',
 });
 
+/* metadataBase makes every page's canonical + Open Graph URL resolve to the
+   live domain, so relative paths in per-page metadata become absolute. It also
+   satisfies Razorpay's check that the site declares its own canonical origin. */
+const SITE = CONFIG.CANONICAL_HOST;
+const TITLE =
+  'Reset by Shruti Solanki — PCOS, Thyroid & Insulin Resistance, Treated Together';
+const DESCRIPTION =
+  'The 90-day programme for women whose PCOS, thyroid and insulin resistance are all happening at once. ₹97, fully refundable, books a 30-minute 1:1 with Shruti.';
+
 export const metadata = {
-  title: 'Reset by Shruti Solanki — PCOS, Thyroid & Insulin Resistance, Treated Together',
-  description:
-    'The 90-day programme for women whose PCOS, thyroid and insulin resistance are all happening at once. ₹97, fully refundable, books a 30-minute 1:1 with Shruti.',
+  metadataBase: new URL(SITE),
+  title: TITLE,
+  description: DESCRIPTION,
+  alternates: { canonical: '/' },
+  openGraph: {
+    type: 'website',
+    url: SITE,
+    siteName: 'Reset by Shruti Solanki',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport = {

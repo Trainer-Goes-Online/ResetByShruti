@@ -5,6 +5,7 @@ export const metadata = {
   title: 'Privacy Policy · Reset by Shruti Solanki',
   description:
     'How Reset by Shruti Solanki collects, uses and protects your personal and health information.',
+  alternates: { canonical: '/privacy' },
 };
 
 /* ============================================================================

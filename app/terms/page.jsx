@@ -5,6 +5,7 @@ export const metadata = {
   title: 'Terms & Conditions · Reset by Shruti Solanki',
   description:
     'The terms on which Reset by Shruti Solanki provides nutrition and lifestyle coaching.',
+  alternates: { canonical: '/terms' },
 };
 
 /* ============================================================================

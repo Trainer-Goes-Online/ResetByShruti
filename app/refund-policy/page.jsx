@@ -5,6 +5,7 @@ export const metadata = {
   title: 'Refund & Cancellation Policy · Reset by Shruti Solanki',
   description:
     'Refund and cancellation terms for the ₹97 diagnosis call and the 12-week Reset programme.',
+  alternates: { canonical: '/refund-policy' },
 };
 
 /* ============================================================================
