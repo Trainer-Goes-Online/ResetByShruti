@@ -90,11 +90,12 @@ Shruti's own story and credentials, the video→client mapping, and Razorpay key
 - [ ] **Consent + PII pass on `public/img/chat/*`** (Q14.1). These are real client WhatsApp
       messages and progress shots. At least one shows a sender's initials. **Blocking.**
 - [ ] Wire Razorpay (QC.1)
-- [x] ~~Create `/privacy`, `/terms`, `/refund-policy`~~ — done, plus `/contact`.
-      **All four are DRAFTS pending legal review, and carry visible gaps for the
-      registered entity, address, grievance officer and jurisdiction (QL.1–QL.12).
-      Razorpay verification will fail until those are filled and the site is on a
-      real domain.**
+- [x] ~~Create `/privacy`, `/terms`, `/refund-policy`~~ — done. Modelled on the
+      two reference funnels (Arjun, Food Freedom): plain-language, contact by
+      email + phone only, no registered-entity/address/grievance-officer fields.
+      **Ready to submit to Razorpay** once the site is on a real domain. They
+      remain DRAFTS pending a lawyer's read; the `/contact` page was removed
+      (neither reference has one).
 - [ ] Legal review of the medical disclaimer (Q20.1)
 - [ ] Define the "80–85% success rate" claim or remove it (Q8.1)
 - [ ] Supply the VSL (Q6.1) and re-derive images to WebP

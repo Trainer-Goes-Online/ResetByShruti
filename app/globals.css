@@ -25,7 +25,7 @@
    landing-premium.css) — values are theirs, not approximations.
    ═══════════════════════════════════════════════════════════════════════════ */
 :root {
-  --brand: 								#6A1B27	;                                            /* ← EDIT THIS */
+  --brand: 								#6A1B27		;                                            /* ← EDIT THIS */
 
   /* Derived ramp — ARJ hardcodes these; deriving them means one edit re-skins. */
   --brand-deep:  color-mix(in srgb, var(--brand) 76%, #000);   /* ARJ #7C5210 */

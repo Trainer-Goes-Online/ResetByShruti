@@ -23,7 +23,7 @@
 import Link from 'next/link';
 import { Ico } from '@/components/Icons';
 import CtaBlock from '@/components/CtaBlock';
-import Price, { Gap } from '@/components/Price';
+import Price from '@/components/Price';
 import { CONFIG, CTA_STRING } from '@/lib/config';
 import { FAQS } from '@/lib/content';
 
@@ -91,11 +91,10 @@ export default function S09FaqFinale() {
       Client results and testimonials vary based on individual factors such as
       consistency, medical history, lifestyle and adherence to the process. Outcomes are
       not typical or guaranteed. This website is not affiliated with or endorsed by Meta.
-      FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.{' '}
-      <Gap>legal review · Q20.1</Gap>
+      FACEBOOK and INSTAGRAM are trademarks of Meta Platforms, Inc.
     </p>
     <p className="ownedby">
-      Owned and operated by <Gap>registered entity · Q20.3</Gap>
+      Owned and operated by Reset by Shruti Solanki
     </p>
     <div className="links">
       <Link href="/privacy">Privacy Policy</Link>
@@ -103,8 +102,6 @@ export default function S09FaqFinale() {
       <Link href="/terms">Terms &amp; Conditions</Link>
       <span aria-hidden="true">·</span>
       <Link href="/refund-policy">Refund Policy</Link>
-      <span className="foot-sep">·</span>
-      <Link href="/contact">Contact Us</Link>
       {CONFIG.INSTAGRAM_URL && (
         <>
           <span aria-hidden="true">·</span>

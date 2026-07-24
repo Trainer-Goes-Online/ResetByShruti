@@ -1,5 +1,4 @@
 import LegalPage from '@/components/LegalPage';
-import { Gap } from '@/components/Price';
 import { CONFIG } from '@/lib/config';
 
 export const metadata = {
@@ -11,181 +10,113 @@ export const metadata = {
 /* ============================================================================
    TERMS & CONDITIONS
 
-   ⚠ DRAFT — REQUIRES LEGAL REVIEW BEFORE YOU RELY ON IT.
+   Modelled on teamfitarjun.com/terms-and-conditions and
+   thefoodfreedomco.com/terms: short, plain, contact by email + phone only.
 
-   The load-bearing clause here is §4: this is nutrition and lifestyle coaching,
-   NOT medical treatment. The business discusses TSH, HbA1c and medication doses
-   with clients. Without an explicit scope-of-practice clause, that is the kind
-   of thing that gets characterised as practising medicine. Section 4 is not
-   boilerplate — it is the clause that protects the practice, and it should be
-   the first thing the reviewing lawyer reads.
+   §3 (coaching, not medical care) is the load-bearing clause and is kept even
+   in this trimmed version — the business discusses TSH / HbA1c with clients, so
+   the scope-of-practice line is what keeps that from being characterised as
+   practising medicine. Both reference funnels carry the equivalent clause.
    ========================================================================== */
 export default function TermsPage() {
-  const mail = CONFIG.SUPPORT_EMAIL
-    ? <a href={`mailto:${CONFIG.SUPPORT_EMAIL}`}>{CONFIG.SUPPORT_EMAIL}</a>
-    : <Gap>support email · QB.2</Gap>;
+  const mail = CONFIG.SUPPORT_EMAIL;
 
   return (
     <LegalPage kicker="Policy" title="Terms & Conditions">
       <p>
         These terms govern your use of this website and any coaching you buy through it. By
-        booking a call or enrolling in the programme, you agree to them. Please read section 4
-        carefully — it explains what this service is and, just as importantly, what it is not.
+        booking a call or enrolling in the programme, you agree to them. This website is operated
+        by <strong>Reset by Shruti Solanki</strong>.
       </p>
 
-      <h2>1. Who we are</h2>
+      <h2>1. What we offer</h2>
       <p>
-        This website is operated by {CONFIG.LEGAL_ENTITY || <Gap>registered entity · QL.1</Gap>},
-        trading as <strong>Reset by Shruti Solanki</strong>, at{' '}
-        {CONFIG.BUSINESS_ADDRESS || <Gap>registered address · QL.2</Gap>}.
+        A ₹{CONFIG.ENTRY_PRICE} booking fee buys a {CONFIG.CALL_MINUTES}-minute one-to-one video
+        consultation with Shruti Solanki. The {CONFIG.PROGRAMME_WEEKS}-week Reset programme is a
+        separate, individually built coaching programme that is discussed only on that call, and
+        only if it is a fit. It is not sold on this website.
       </p>
 
-      <h2>2. Who can use this service</h2>
+      <h2>2. Bookings and payment</h2>
       <ul>
-        <li>You must be 18 or over.</li>
-        <li>You must be legally able to enter a contract.</li>
-        <li>The information you give us must be accurate and your own.</li>
+        <li>Payments are processed securely by <strong>Razorpay</strong>. We never see or store your card or bank details.</li>
+        <li>Prices are in Indian Rupees and include applicable taxes unless stated otherwise.</li>
+        <li>Your call slot is confirmed only once payment succeeds.</li>
+        <li>We may update prices at any time; the price that applies to you is the one shown when you pay.</li>
+        <li>Programme fees and any instalments are agreed in writing before you enrol.</li>
       </ul>
-      <p>
-        Coaching is offered to women managing PCOS, thyroid conditions and insulin resistance.
-        We may decline to work with anyone where we believe coaching is not appropriate — and
-        if we do, we refund you.
-      </p>
 
-      <h2>3. What you are buying</h2>
-      <h3>The diagnosis call — ₹{CONFIG.ENTRY_PRICE}</h3>
-      <p>
-        A {CONFIG.CALL_MINUTES}-minute one-to-one video consultation with Shruti Solanki. It is a
-        diagnostic conversation, not a sales call. If the programme is a fit, it is explained at
-        the end. If it is not, you are told so directly.
-      </p>
-      <h3>The Reset programme — {CONFIG.PROGRAMME_WEEKS} weeks</h3>
-      <p>
-        Individually built nutrition and lifestyle coaching, including weekly plans, condition-
-        specific protocols, optional at-home workouts, weekly check-ins and progress tracking.
-        The programme is agreed separately after the call and is not sold on this website.
-      </p>
-
-      <h2>4. What this service is — and is not</h2>
+      <h2>3. Coaching, not medical care</h2>
       <div className="legal-note">
         <p>
-          <strong>Reset provides nutrition and lifestyle coaching. It is not medical
-          treatment, diagnosis or prescription, and Shruti Solanki is not acting as your
-          doctor.</strong>
+          <strong>Reset provides nutrition and lifestyle coaching. It is not medical treatment,
+          diagnosis or prescription, and Shruti Solanki is not acting as your doctor.</strong>
         </p>
         <p>
           We may discuss blood markers such as TSH and HbA1c in order to build your plan around
-          them. Doing so is not a diagnosis and does not replace medical care.
-        </p>
-        <p>
-          <strong>Never start, stop or change any medication because of anything said in this
-          programme.</strong> Medication is between you and your doctor. Please keep your
-          treating clinician informed that you are working with a coach, and consult them
-          before making changes to diet or exercise, particularly if you are pregnant, trying to
-          conceive, breastfeeding, diabetic, or managing any other condition.
-        </p>
-        <p>
-          PCOS and thyroid conditions are <strong>managed, not cured.</strong> Anyone who tells
-          you otherwise is selling you something.
+          them, but this is not a diagnosis and does not replace medical care. Never start, stop
+          or change any medication because of anything in this programme — that is between you and
+          your doctor. Please consult a qualified doctor before making changes to your diet or
+          exercise, particularly if you are pregnant, trying to conceive, breastfeeding, diabetic
+          or managing any other condition. PCOS and thyroid conditions are managed, not cured.
         </p>
       </div>
 
-      <h2>5. Results</h2>
+      <h2>4. Results</h2>
       <p>
-        Results depend on your body, your history, your consistency and factors outside anyone's
-        control. Testimonials on this site describe what specific individuals achieved. They are
-        not a prediction of what you will achieve, and they are not typical or guaranteed.
-      </p>
-      <p>
-        We make one promise: that you will feel lighter — less bloating, less puffiness — within
-        the first fourteen days. That describes what the first phase does. No specific weight,
-        measurement or blood-marker outcome is promised at any point.
+        Results depend on your body, your history and your consistency. The transformations and
+        testimonials shown on this site are the real experiences of past clients; they are
+        individual outcomes and are not typical, promised or guaranteed. Our one promise is that
+        you will feel lighter — less bloating and puffiness — within the first fourteen days. No
+        specific weight, measurement or blood-marker outcome is promised.
       </p>
 
-      <h2>6. Payment</h2>
+      <h2>5. Refunds</h2>
+      <p>
+        The ₹{CONFIG.ENTRY_PRICE} booking fee is refundable on the terms set out in our{' '}
+        <a href="/refund-policy">Refund &amp; Cancellation Policy</a>. Once you enrol, the Reset
+        programme fee is non-refundable. Full details are in the Refund Policy, which forms part
+        of these terms.
+      </p>
+
+      <h2>6. Intellectual property</h2>
+      <p>
+        All content on this site and within the programme — text, designs, frameworks, protocols,
+        templates and videos — belongs to us. You get a personal, non-transferable licence to use
+        your own material for yourself. Please do not copy, share, resell or republish it.
+      </p>
+
+      <h2>7. Acceptable use</h2>
+      <p>
+        Use this site lawfully and give accurate information about yourself and your health. We may
+        decline or end service where information is materially false, where the material is shared
+        or resold, or where a coach is treated abusively.
+      </p>
+
+      <h2>8. Liability</h2>
+      <p>
+        To the fullest extent permitted by law, our total liability to you is limited to the amount
+        you actually paid us. We are not liable for indirect or consequential loss. Nothing in
+        these terms limits any liability that cannot lawfully be limited.
+      </p>
+
+      <h2>9. Governing law</h2>
+      <p>
+        These terms are governed by the laws of India, and the courts of India have jurisdiction.
+        We would always rather resolve things by talking first.
+      </p>
+
+      <h2>10. Changes</h2>
+      <p>
+        We may update these terms. The version that applies to you is the one published on the day
+        you paid, with the date shown above.
+      </p>
+
+      <h2>11. Contact us</h2>
       <ul>
-        <li>Payments are processed by <strong>Razorpay</strong>. We never see your card or bank details.</li>
-        <li>Prices are in Indian Rupees and include applicable taxes unless stated otherwise.</li>
-        <li>Your call slot is confirmed only once payment succeeds.</li>
-        <li>Programme fees, schedule and instalments are agreed in writing before you enrol.</li>
+        {mail && <li><strong>Email:</strong> <a href={`mailto:${mail}`}>{mail}</a></li>}
+        {CONFIG.WHATSAPP_DISPLAY && <li><strong>Phone / WhatsApp:</strong> {CONFIG.WHATSAPP_DISPLAY}</li>}
       </ul>
-      <p>
-        Refunds are governed by our <a href="/refund-policy">Refund &amp; Cancellation Policy</a>,
-        which forms part of these terms.
-      </p>
-
-      <h2>7. What we ask of you</h2>
-      <ul>
-        <li>Give accurate information about your health. The plan is only as good as what you tell us.</li>
-        <li>Tell us about diagnoses, medication and symptoms that could affect your plan, and tell us if they change.</li>
-        <li>Attend your call on time, and let us know if you cannot.</li>
-        <li>Use the material for yourself only.</li>
-      </ul>
-
-      <h2>8. Your plan belongs to you. The system does not.</h2>
-      <p>
-        All programme content — frameworks, protocols, templates, workout videos and written
-        material — remains our intellectual property. You get a personal, non-transferable
-        licence to use it for yourself for as long as you are a client.
-      </p>
-      <p>
-        Please do not share, resell, republish or teach it. Your own plan, your own data and your
-        own results are yours.
-      </p>
-
-      <h2>9. Ending the arrangement</h2>
-      <p>
-        You may stop at any time. Refund entitlement is set out in the Refund Policy.
-      </p>
-      <p>
-        We may end coaching if information you gave was materially false, if the material is
-        shared or resold, or if a coach is treated abusively. Where we end it for reasons that
-        are not your fault, we refund the unused portion pro-rata.
-      </p>
-
-      <h2>10. Limitation of liability</h2>
-      <p>
-        To the fullest extent permitted by law, our total liability arising out of these terms is
-        limited to the amount you actually paid us in the twelve months before the claim.
-      </p>
-      <p>
-        We are not liable for indirect or consequential loss. <strong>Nothing in these terms
-        limits liability for death or personal injury caused by negligence, for fraud, or for
-        anything else that cannot lawfully be limited.</strong>
-      </p>
-
-      <h2>11. Third-party services</h2>
-      <p>
-        This site relies on services we do not control — Razorpay, Calendly, Vimeo, WhatsApp and
-        our hosting provider. If one of them is unavailable, we will find you another route
-        rather than leaving you stuck, but we are not responsible for their own failures.
-      </p>
-
-      <h2>12. Privacy</h2>
-      <p>
-        How we handle your information, including health information, is set out in our{' '}
-        <a href="/privacy">Privacy Policy</a>, which forms part of these terms.
-      </p>
-
-      <h2>13. Grievances</h2>
-      <p>
-        Complaints go to {CONFIG.GRIEVANCE_OFFICER || <Gap>grievance officer · QL.4</Gap>} at{' '}
-        {mail}. We acknowledge within 48 hours and aim to resolve within 30 days, as required by
-        the Consumer Protection (E-Commerce) Rules, 2020.
-      </p>
-
-      <h2>14. Governing law</h2>
-      <p>
-        These terms are governed by the laws of India. The courts at{' '}
-        {CONFIG.JURISDICTION || <Gap>jurisdiction city · QL.5</Gap>} have exclusive
-        jurisdiction. We would much rather resolve things by talking first.
-      </p>
-
-      <h2>15. Changes</h2>
-      <p>
-        We may update these terms. The version that applies to you is the one published on the
-        day you paid. Material changes are dated at the top of this page.
-      </p>
     </LegalPage>
   );
 }
