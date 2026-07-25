@@ -29,10 +29,10 @@ export default function LandingPage() {
       <div className="credband">
         <div className="credband-inner">
           <span>
-            {CONFIG.YEARS_COACHING ? <b>{CONFIG.YEARS_COACHING}+ Years</b> : <Gap>yrs · Q2.1</Gap>} Of Coaching
+            300+ WOMEN TRANSFORMED
           </span>
           <span className="sep" />
-          <span><b>{CONFIG.CLIENT_COUNT}</b> Women Coached</span>
+          <span><b>5-15 KGS</b> LOST PER CLIENT </span>
         </div>
       </div>
 

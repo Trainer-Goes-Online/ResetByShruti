@@ -29,13 +29,14 @@ export default function S04Proof() {
   <div className="wrap">
 
     {/* ARJ: p.af-eyebrow → h2 (mb46) → p.af-section-lede (mb40) → .af-tcards */}
-    <p className="eyebrow reveal">Real women · real markers · real timelines</p>
+    <p className="eyebrow reveal">Real Working Women · Real Transformations</p>
     <h2 className="reveal" data-d="1">
-      Women Who Were Told It Was Just <em>Discipline</em>
+      Working Women Who Finally Found<br className="br-mob" />{' '}
+      Results That <em>Lasted</em>
     </h2>
     <p className="lede reveal" data-d="2">
-      Corporate lawyers, PhD scholars, psychologists — women with the same three
-      conditions and the same stalled scale. These are their numbers, not adjectives.
+      These are women like you. Lawyers, psychologists, researchers, corporate
+      professionals and entrepreneurs.
     </p>
 
     {/* ── 13a · video testimonials — ARJ's .af-tcard shell, portrait media ── */}
@@ -68,18 +69,31 @@ export default function S04Proof() {
       })}
     </div>
 
-    {/* ── 13b · written case files — ARJ's 6-cell grid: 5 cases + summary ── */}
-    <div className="tcards">
-      {CASES.map((c, i) => (
-        <article
-          className="tcard reveal"
-          key={c.name}
-          data-d={i > 0 ? String(i) : undefined}
-        >
+    {/* ── 13b · written case files — a MOVING CAROUSEL (mirrors the message-wall
+        marquee: the set is authored twice so the -50% translate loops
+        seamlessly; it is real HTML before JS and pauses on hover/focus). ── */}
+    <div className="case-row" aria-label="Client transformations">
+      <div className="case-track">
+        <CaseSet />
+        <CaseSet clone />
+      </div>
+    </div>
+
+  </div>
+</section>
+  );
+}
+
+/* One pass of the case cards + the closing count card. Rendered twice; the
+   clone is decorative (aria-hidden, not focusable). */
+function CaseSet({ clone = false }) {
+  return (
+    <div className="case-set" aria-hidden={clone || undefined}>
+      {CASES.map((c) => (
+        <article className="tcard case-card" key={c.name}>
           <div className="tcard-body">
             <h4>{c.name}</h4>
             <div className="meta">{c.meta}{c.metaGap && <> · <Gap>{c.metaGap}</Gap></>}</div>
-            {/* ARJ .af-tcard-body .stars — glyphs, not SVG: 14px, ls 1px */}
             <div className="stars" aria-label="5 out of 5">★★★★★</div>
             <p>{c.story}</p>
             <div className="metrics">
@@ -94,18 +108,13 @@ export default function S04Proof() {
         </article>
       ))}
 
-      {/* ARJ .af-tcard-more — "+1,295 More Transformations". Ours carries the
-          only client-count fact we hold (CONFIG.CLIENT_COUNT = 300+). */}
-      <article className="tcard tcard-more reveal" data-d="5">
+      <article className="tcard tcard-more case-card">
         <div>
           <div className="num">{CONFIG.CLIENT_COUNT}</div>
           <div className="ttl">Women Coached</div>
-          <p>Eight of their stories are on this page. The rest stay private.</p>
+          <p>A handful of their stories are here. The rest stay private.</p>
         </div>
       </article>
     </div>
-
-  </div>
-</section>
   );
 }

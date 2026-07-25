@@ -1031,6 +1031,27 @@ body.locked { overflow: hidden; }
 
 .h1-accent { color: var(--brand); font-style: normal; }
 
+/* ── Sreshtha-style hero (thefoodfreedomco.com) ─────────────────────────────
+   Lighter serif, higher readability, nothing shouting. The headline drops from
+   w700 to a light weight and eases the negative tracking; only the metric keeps
+   a solid filled pill (their green box → our brand), so the eye lands on the
+   number, not on the whole line. */
+.hero h1.h1-soft {
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  line-height: 1.24;
+  color: var(--ink);
+}
+.h1-soft .h1-chip {
+  display: inline-block;
+  padding: .02em .34em .12em;
+  border-radius: .16em;
+  background: var(--brand);
+  color: #fff;
+  font-weight: 500;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--brand) 26%, transparent);
+}
+
 
 /* ── Sub-heads · .af-sub-strong / .af-sub-markers ── */
 .hero .sub {
@@ -1798,6 +1819,33 @@ body.locked { overflow: hidden; }
 @keyframes wallScrollRtl {
   from { transform: translate3d(-50%, 0, 0); }
   to   { transform: translate3d(0, 0, 0); }
+}
+
+/* ── §13b · CASE-FILE CAROUSEL ──────────────────────────────────────────────
+   Same marquee mechanics as the message wall (set authored twice, -50% loop,
+   pause on hover/focus, edge mask), sized for the tall testimonial cards. */
+.case-row {
+  position: relative; overflow: hidden; padding: 12px 0 6px; margin-top: 6px;
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  user-select: none; -webkit-user-select: none;
+}
+.case-track {
+  display: flex; width: max-content; will-change: transform;
+  animation: wallScrollLtr 60s linear infinite;
+}
+.case-row:hover .case-track,
+.case-row:focus-within .case-track { animation-play-state: paused; }
+.case-set { display: flex; gap: 20px; flex-shrink: 0; padding-right: 20px; align-items: stretch; }
+.case-set .case-card { flex: 0 0 340px; width: 340px; margin: 0; align-self: stretch; }
+@media (max-width: 640px) {
+  .case-set { gap: 14px; padding-right: 14px; }
+  .case-set .case-card { flex-basis: 296px; width: 296px; }
+  .case-track { animation-duration: 46s; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .case-track { animation: none; }
+  .case-row { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
 /* ARJ .af-gal-set — display:flex, gap:18px, flex-shrink:0. */
@@ -5060,6 +5108,9 @@ body.locked { overflow: hidden; }
    asset is a near-white LOGO. Ours is a photograph of the coach, so it takes
    the base rule — full bleed, cropped. */
 .co-page .co-prod-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Neutral product mark — the coach's face is intentionally not shown at checkout. */
+.co-page .co-prod-ic { display: grid; place-items: center; color: var(--brand); }
+.co-page .co-prod-ic svg { width: 34px; height: 34px; }
 
 .co-page .co-prod-info { min-width: 0; flex: 1; }
 

@@ -2,9 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Script from 'next/script';
 import { Ico } from '@/components/Icons';
-import Price, { Gap } from '@/components/Price';
+import Price from '@/components/Price';
 import { CONFIG } from '@/lib/config';
+import { restoreParams, trackGa4Once, fireMetaIcOnce } from '@/lib/track';
 
 /* ============================================================================
    CHECKOUT · form + order summary + sticky pay bar
@@ -14,11 +16,12 @@ import { CONFIG } from '@/lib/config';
    because ARJ's summary owns the pay button and the pay button owns the
    form's submit — one client boundary, one source of truth for validity.
 
-   ⚠ DECLARED PLACEHOLDER: Razorpay is NOT wired (QC.1). ARJ's submit handler
-   creates an order, opens the Razorpay modal and redirects on the payment
-   handler. Ours validates, then advances to /book-a-call so the flow is
-   previewable end to end. It is not a payment and does not pretend to be one —
-   the <Gap> chip under the button says so on screen.
+   PAYMENT FLOW (live):
+     GA4 initiate_checkout (before validation) → validate → Meta ic_event
+     (full PII, 9.3 EMQ) → create-order (packs UTM/fbclid/fbc/fbp/IP/UA into
+     order.notes) → Razorpay ₹97 modal → success handler → checkout-signature
+     verify → redirect to /book-a-call. The `sales` event + Pabbly row are the
+     webhook's job (server-to-server), so a UPI-away payer is still tracked.
    ========================================================================== */
 
 /* ARJ app/checkout/countries.ts — same list, same ordering. */
@@ -106,8 +109,23 @@ export default function CheckoutForm() {
   const blur = useCallback((key) => setTouched((p) => ({ ...p, [key]: true })), []);
   const hasError = (key) => Boolean(touched[key]) && !validateField(key, form[key]);
 
-  const onSubmit = (e) => {
+  const buildCustomer = () => ({
+    firstName: form.fname.trim(),
+    lastName: form.lname.trim(),
+    email: form.email.trim(),
+    phone: form.phone.trim(),
+    city: form.town.trim(),
+    countryCode: country.iso.toUpperCase(),
+    dialCode: country.dial,
+  });
+
+  const onSubmit = async (e) => {
     e.preventDefault();
+
+    /* GA4 initiate_checkout fires FIRST, before validation — the signal is
+       "did they attempt to pay" (GA4 brief v2.0). Independent of Meta. */
+    trackGa4Once('initiate_checkout');
+
     const allTouched = {};
     KEYS.forEach((k) => { allTouched[k] = true; });
     setTouched(allTouched);
@@ -117,13 +135,93 @@ export default function CheckoutForm() {
       document.getElementById(`f-${firstBad}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
+
     setLoading(true);
-    /* QC.1 — this is where createOrder() + the Razorpay modal go. */
-    router.push('/book-a-call');
+    const customer = buildCustomer();
+
+    /* Meta ic_event — after validation, before create-order. Full PII (9.3 EMQ).
+       Non-blocking: a tracking failure must never stop the payment. */
+    try { await fireMetaIcOnce(customer); } catch { /* ignore */ }
+
+    try {
+      const attr = restoreParams();
+      const res = await fetch('/api/razorpay/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          amount: Number(CONFIG.ENTRY_PRICE) || 97,
+          currency: 'INR',
+          customer,
+          utm: attr,
+          fbclid: attr.fbclid || '',
+        }),
+      });
+      const order = await res.json();
+      if (!order.ok || !order.orderId) {
+        setLoading(false);
+        alert('We could not start the payment just now. Please try again in a moment.');
+        return;
+      }
+      openRazorpay(order, customer);
+    } catch {
+      setLoading(false);
+      alert('Something went wrong starting the payment. Please try again.');
+    }
+  };
+
+  const openRazorpay = (order, customer) => {
+    const Rzp = typeof window !== 'undefined' && window.Razorpay;
+    if (!Rzp) {
+      setLoading(false);
+      alert('The payment library did not load. Please refresh the page and try again.');
+      return;
+    }
+    const rzp = new Rzp({
+      key: order.keyId,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Reset by Shruti Solanki',
+      description: `${CONFIG.CALL_MINUTES}-minute 1:1 diagnosis call with Shruti`,
+      order_id: order.orderId,
+      prefill: {
+        name: `${customer.firstName} ${customer.lastName}`.trim(),
+        email: customer.email,
+        contact: `${customer.dialCode}${customer.phone}`,
+      },
+      notes: { kind: 'client_funnel' },
+      theme: { color: '#A8542F' },
+      handler: async (resp) => {
+        /* Verified capture only → advance. Tracking is the webhook's job. */
+        try {
+          const v = await fetch('/api/razorpay/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(resp),
+          });
+          const vr = await v.json();
+          if (vr.ok) {
+            router.push('/book-a-call');
+          } else {
+            setLoading(false);
+            alert('We could not verify the payment. If you were charged, please contact support and we will sort it out right away.');
+          }
+        } catch {
+          setLoading(false);
+          alert('Payment verification failed. If you were charged, please contact support.');
+        }
+      },
+      modal: { ondismiss: () => setLoading(false) },
+    });
+    rzp.on('payment.failed', () => {
+      setLoading(false);
+      alert('The payment did not go through. Please try again.');
+    });
+    rzp.open();
   };
 
   return (
     <>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="afterInteractive" />
       <div className="co-grid">
         {/* ═══ LEFT · YOUR DETAILS ═══════════════════════════════════════ */}
         <form className="co-form" id="co-form" noValidate onSubmit={onSubmit}>
@@ -278,9 +376,8 @@ export default function CheckoutForm() {
             </div>
 
             <div className="co-prod">
-              <div className="co-prod-img">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/img/coach/shruti-1.jpg" alt="" width={86} height={86} />
+              <div className="co-prod-img co-prod-ic" aria-hidden="true">
+                <Ico id="chat" className="ico" />
               </div>
               <div className="co-prod-info">
                 <div className="co-prod-title">
@@ -370,8 +467,6 @@ export default function CheckoutForm() {
               Fully refundable if the call doesn’t happen, or if you finish it and it wasn’t worth
               your time. {CONFIG.CALL_MINUTES} minutes, 1:1 with Shruti.
             </p>
-
-            <p className="co-gapline"><Gap>Razorpay not wired · QC.1</Gap></p>
           </div>
         </aside>
       </div>

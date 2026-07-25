@@ -42,45 +42,40 @@ export default function S01Hero() {
           <span className="af-stars"><Gap>rating · Q2.2</Gap></span>
         )}
         <span className="divider" />
-        <span className="proof-claim">
+        {/* <span className="proof-claim">
           <span className="proof-ic"><Ico id="shield" /></span>
           <span><Price /> Fully Refundable</span>
-        </span>
+        </span> */}
       </div>
     </div>
 
     <div className="eyebrow-pill reveal" data-d="1">
-      For women whose PCOS, thyroid and insulin resistance are all happening at once
+      FOR WORKING WOMEN WHO ARE DONE WITH DIETS THAT NEVER LAST 
     </div>
 
     {/* Three explicit lines, exactly as ARJ hard-breaks theirs:
         boxed metric → coloured second outcome → plain identity line. */}
-    <h1 className="reveal" data-d="1">
-      Lose{' '}
-      {/* ARJ boxes a SHORT hard metric ("10–20 Kilos"). Our kg range is
-          still Q3.1, and a box around a full phrase clips at 37px on a
-          390px screen — so until the number lands the clause is plain
-          ink and only the second clause carries colour, which is ARJ's
-          one-coloured-phrase rule. Supplying NEXT_PUBLIC_KG_RANGE
-          switches the box on automatically. */}
-      {CONFIG.KG_RANGE
-        ? <><span className="h1-chip">{CONFIG.KG_RANGE} Kilos</span>,</>
-        : <>The Stubborn Weight,</>}<br />
-      Bring Your <span className="h1-accent">Markers Back In Range</span>,<br />
-      &amp; Stop Fighting Your Body
+    {/* Sreshtha-style hero: light serif, high readability, ONLY the metric
+        carries a filled pill — the condition line stays plain ink so nothing
+        shouts. The client's copy fixes the metric at "5-15 Kilos"; supplying
+        NEXT_PUBLIC_KG_RANGE overrides it without a code change. */}
+    <h1 className="reveal h1-soft" data-d="1">
+      Lose <span className="h1-chip">{CONFIG.KG_RANGE || '5-15'} Kilos</span>,<br />
+      Even If You Have PCOS,<br />
+      Thyroid &amp; Insulin Resistance
     </h1>
 
     <p className="sub reveal" data-d="2">
-      Through The Overlap Reset, a {CONFIG.PROGRAMME_DAYS}-day protocol designed for women
-      whose weight will not move because three things are happening at the same time.
+      Through A Personalised Hormone Reset Approach Designed To Help 
+      Working Women Finally Take Control Of Their Weight & Health.
+
     </p>
 
     <p className="reach-para reveal" data-d="3">
       <b>{CONFIG.CLIENT_COUNT} Women</b>{' '}
       {CONFIG.GEOGRAPHY ? <span className="u">across {CONFIG.GEOGRAPHY}</span> : <Gap>geography · Q4.1</Gap>}{' '}
-      have worked with Shruti on{' '}
-      <span className="pill">stubborn weight</span>, brought markers back into range and
-      improved the symptoms linked to:
+       have achieved lasting{' '}
+      <span className="pill">weight loss </span> while improving their metabolic & hormone health, including:
     </p>
 
     <ul className="chips reveal" data-d="3">

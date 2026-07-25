@@ -25,17 +25,17 @@ export default function CtaBlock({ micro = false, style }) {
         <span>{CTA_STRING}</span>
         <span className="arrow-disc"><Ico id="arrow" className="ico ico-sm arrow" /></span>
       </Link>
-
+{/* 
       {micro && (
         <p className="cta-micro">
           <Price /> to book · {CONFIG.CALL_MINUTES} minutes, 1:1 with Shruti · fully refundable
         </p>
-      )}
+      )} */}
 
       <ul className="triad">
-        <li><Ico id="shield" className="ico ico-sm" /> <b><Price /></b>&nbsp;Fully Refundable</li>
-        <li><Ico id="users" className="ico ico-sm" /> <b>{CONFIG.CLIENT_COUNT}</b>&nbsp;Women Coached</li>
-        <li><Ico id="spark" className="ico ico-sm" /> Trusted By Women With PCOS &amp; Thyroid</li>
+        <li><Ico id="shield" className="ico ico-sm" />100% Client Satisfaction </li>
+        <li><Ico id="users" className="ico ico-sm" /> <b>{CONFIG.CLIENT_COUNT}</b>&nbsp;Success Stories</li>
+        <li><Ico id="spark" className="ico ico-sm" /> Trusted by Women Globally</li>
       </ul>
 
       {/* Countdown slot — same position as the references. Filled by

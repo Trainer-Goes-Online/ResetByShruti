@@ -12,20 +12,14 @@
    carries it. Ours now matches; the CtaBlock that used to sit here is gone.
    ========================================================================== */
 import Image from 'next/image';
-import { Gap } from '@/components/Price';
 import { CONFIG } from '@/lib/config';
 
 export default function S06Coach() {
   return (
     <>
 {/* ═══ MEET YOUR COACH — both references lead this with the coach's OWN
-    transformation number BEFORE any credential, then a first-person
-    narrative. This is also where FFC does its relieve-the-blame work
-    ("the real issue was never a lack of discipline"), which is why
-    there is no separate section for it.
-    DECLARED PLACEHOLDER — the strategy document has nothing on Shruti
-    personally, and biography is never drafted. The SHELL is ARJ-exact;
-    the words are <Gap> chips until Q15.1–Q15.6 land. ═══ */}
+    story before any credential, then the blame-relief ("told to simply eat
+    less and move more"). Copy is the client's own, from the project file. ═══ */}
 <section className="section coachsec">
   <div className="wrap">
     <div className="coach-grid">
@@ -35,15 +29,15 @@ export default function S06Coach() {
         <span className="coach-badge">Meet Your Coach</span>
         <div className="coach-frame" aria-hidden="true" />
         <Image
-          src="/img/coach/shruti-1.jpg"
+          src="/img/coach/shruti-2.jpg"
           alt="Shruti Solanki"
           fill
           sizes="(max-width: 900px) 100vw, 440px"
           className="coach-img"
         />
-        {/* ARJ .count — own-transformation number FIRST, then scale */}
+        {/* ARJ .count — credential pair over the bottom scrim */}
         <div className="coach-count">
-          <div><b><Gap>her own number · Q15.1</Gap></b><span>Her Own Journey</span></div>
+          <div><b>BSc · MSc</b><span>Nutrition &amp; Health</span></div>
           <div><b>{CONFIG.CLIENT_COUNT}</b><span>Women Coached</span></div>
         </div>
       </div>
@@ -52,21 +46,26 @@ export default function S06Coach() {
       <div className="coach-text reveal" data-d="1">
         <p className="eyebrow coach-eyebrow">Meet Your Coach</p>
         <h2>
-          The Coach Behind<br className="br-mob" />{' '}
-          <span>The Overlap Reset</span>
+          The Nutritionist Who’s Lived The<br className="br-mob" />{' '}
+          <span>Same Hormonal Struggles As You</span>
         </h2>
         <p>
-          <Gap>First-person origin story · Q15.1</Gap> — both reference funnels run the
-          coach’s own transformation here, in her own words, before any qualification.
-          It is also where the blame-relief lands: the reader learns that the coach
-          failed the same way she did, and why.
+          Shruti Solanki was diagnosed with <strong>Hashimoto’s at just 12 years old.</strong>{' '}
+          She knows what it’s like to battle stubborn weight, fatigue and hormonal imbalances
+          while being told to simply “eat less and move more.”
         </p>
         <p>
-          <Gap>Credentials · Q15.2</Gap>{' '}<Gap>Years in practice · Q15.3</Gap>{' '}
-          <Gap>Why this specialism · Q15.4</Gap> — ARJ closes this paragraph on scale and
-          reach, which for us is{' '}
-          <span className="coach-pill">{CONFIG.CLIENT_COUNT} women</span> coached through{' '}
-          <span className="coach-hl">PCOS, thyroid and insulin resistance together</span>.
+          Instead of accepting that answer, she spent years studying nutrition, earning her{' '}
+          <strong>BSc &amp; MSc in Nutrition &amp; Health</strong>, along with multiple
+          certifications in <strong>Weight Loss Advisory, Diabetes Education, and Skin &amp;
+          Nutrition.</strong>
+        </p>
+        <p>
+          Today, through <strong>RESET by Shruti Solanki</strong>, she’s helped{' '}
+          <span className="coach-pill">{CONFIG.CLIENT_COUNT} women</span> across India, the UK,
+          the US and Canada lose weight sustainably while improving{' '}
+          <span className="coach-hl">PCOS, thyroid health and insulin resistance</span> — without
+          restrictive diets or giving up the foods they love.
         </p>
       </div>
 

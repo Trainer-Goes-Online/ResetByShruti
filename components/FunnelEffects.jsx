@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { CONFIG } from '@/lib/config';
+import { captureParams, trackGa4Once, fireMetaAtcOnce } from '@/lib/track';
 
 /* ============================================================================
    All funnel behaviour, mounted ONCE at the page root.
@@ -23,6 +24,42 @@ export default function FunnelEffects() {
     const $ = (s, r = document) => r.querySelector(s);
     const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
     const cleanups = [];
+
+    /* ------------------------------------------- ATTRIBUTION (LP → thank-you)
+       First-touch capture of the utm params, fbclid and gclid into localStorage,
+       so checkout can pack them into the Razorpay order.notes and the webhook can
+       rebuild the full Pabbly row + high-EMQ `sales` event. Runs on every page;
+       only writes on the first page that actually carries params. */
+    captureParams();
+
+    /* --------------------------------------- CTA TRACKING (add_to_cart / atc)
+       One delegated, capture-phase listener covers EVERY checkout CTA — hero,
+       mid-page, pricing, closing, and the sticky bar — including ones injected
+       later. Capture phase + optimistic dedup flags mean the signal survives
+       the navigation the click triggers. Fires GA4 `add_to_cart` (once) and the
+       Meta `atc_event` beacon (once), both independent, both non-blocking. */
+    const onCtaClick = (e) => {
+      const t = e.target;
+      const a = t && t.closest && t.closest('a.cta-big, a.stuck-cta, a[href="/checkout"]');
+      if (!a) return;
+      trackGa4Once('add_to_cart');
+      fireMetaAtcOnce();
+    };
+    document.addEventListener('click', onCtaClick, true);
+    cleanups.push(() => document.removeEventListener('click', onCtaClick, true));
+
+    /* ------------------------------------------------- BOOK_CALL (GA4, iframe)
+       Calendly books inside an iframe — no button of ours to attach to — so we
+       listen for its postMessage. Origin-checked, fires GA4 `book_call` once on
+       a real scheduled event. */
+    const onCalendlyMsg = (e) => {
+      if (typeof e.origin === 'string' && e.origin.endsWith('calendly.com')
+        && e.data && e.data.event === 'calendly.event_scheduled') {
+        trackGa4Once('book_call');
+      }
+    };
+    window.addEventListener('message', onCalendlyMsg);
+    cleanups.push(() => window.removeEventListener('message', onCalendlyMsg));
 
     /* ---------------------------------------------------- REVEAL (fail-open)
        The element is VISIBLE from the server. We add `.armed` to <body> only
@@ -251,6 +288,9 @@ export default function FunnelEffects() {
           f.title = 'Watch the Reset video';
           frame.appendChild(f);
           ph.style.display = 'none';
+          /* Hero VSL only (this handler is bound to #vslframe alone), so the
+             once-per-browser video_play is scoped correctly. */
+          trackGa4Once('video_play');
         };
         ph.addEventListener('click', play);
         ph.addEventListener('keydown', (e) => {
@@ -277,7 +317,7 @@ export default function FunnelEffects() {
       if (CONFIG.MONTHLY_INTAKE_CAP) {
         paint(`Only ${CONFIG.MONTHLY_INTAKE_CAP} new clients taken each month`);
       } else {
-        const WINDOW_MS = 3 * 60 * 60 * 1000;
+        const WINDOW_MS = 5 * 60 * 60 * 1000;
         let end;
         if (CONFIG.COUNTDOWN_DEADLINE) {
           end = new Date(CONFIG.COUNTDOWN_DEADLINE).getTime();

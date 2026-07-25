@@ -27,7 +27,7 @@ export default function S02Stats() {
               : s.value}
           </div>
           <div className="cred-label">{s.label}</div>
-          <div className="cred-sub">{s.sub || <Gap>{s.subGap}</Gap>}</div>
+          {/* <div className="cred-sub">{s.sub || <Gap>{s.subGap}</Gap>}</div> */}
         </div>
       ))}
     </div>
