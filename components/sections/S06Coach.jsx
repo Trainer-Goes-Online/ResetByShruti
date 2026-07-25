@@ -62,9 +62,8 @@ export default function S06Coach() {
         </p>
         <p>
           Today, through <strong>RESET by Shruti Solanki</strong>, she’s helped{' '}
-          <span className="coach-pill">{CONFIG.CLIENT_COUNT} women</span> across India, the UK,
-          the US and Canada lose weight sustainably while improving{' '}
-          <span className="coach-hl">PCOS, thyroid health and insulin resistance</span> — without
+          <span className="coach-pill">{CONFIG.CLIENT_COUNT} women</span> across <span className="coach-hl">India, the UK,
+          the US and Canada</span> lose weight sustainably while improving{' '} PCOS, thyroid health and insulin resistance — without
           restrictive diets or giving up the foods they love.
         </p>
       </div>

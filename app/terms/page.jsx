@@ -74,10 +74,13 @@ export default function TermsPage() {
 
       <h2>5. Refunds</h2>
       <p>
-        The ₹{CONFIG.ENTRY_PRICE} booking fee is refundable on the terms set out in our{' '}
-        <a href="/refund-policy">Refund &amp; Cancellation Policy</a>. Once you enrol, the Reset
-        programme fee is non-refundable. Full details are in the Refund Policy, which forms part
-        of these terms.
+        The ₹{CONFIG.ENTRY_PRICE} booking fee for the diagnostic call is a one-time charge for that
+        consultation and is <strong>non-refundable</strong>. The Reset 90-day programme is a
+        separate enrolment and is backed by a <strong>100% Money-Back Guarantee</strong> — if you
+        follow your personalised plan and meet the participation requirements but do not reach the
+        agreed result, your programme fee is refunded in full. Full details, eligibility and the
+        refund process are in our <a href="/refund-policy">Refund Policy</a>, which forms part of
+        these terms.
       </p>
 
       <h2>6. Intellectual property</h2>

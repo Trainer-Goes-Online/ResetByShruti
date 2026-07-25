@@ -71,8 +71,9 @@ export default function S05Wall() {
 <section className="section wallsec" id="wall">
   <div className="wrap">
     <div className="section-head">
-      <span className="eyebrow">Real clients · unprompted · no filters</span>
-      <h2>What They Send While It Is Still <em className="u-word">Happening</em></h2>
+      {/* <span className="eyebrow">Real clients · unprompted · no filters</span> */}
+      <h2>Thousands Of Messages. Hundreds Of <em className="u-word"> Wins.</em></h2>
+      <p className="lede reveal" data-d="2">Here's a small glimpse into our clients' journeys.</p>
     </div>
   </div>
 

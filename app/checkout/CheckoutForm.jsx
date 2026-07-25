@@ -77,6 +77,71 @@ function validateField(id, value) {
 
 const KEYS = ['fname', 'lname', 'email', 'phone', 'town'];
 
+/* ── Branded payment marks — inline SVG, real brand colours ────────────────
+   Razorpay settles UPI / cards / net-banking, so these are the honest set.
+   Rendered as SVG rather than .webp bitmaps: crisp at every DPR, no extra
+   asset pipeline, and self-contained (the reference funnel does the same).
+   Each viewBox is normalised to height 16 so the badge shell can size them
+   uniformly with `height:18px; width:auto`. */
+const PAY_METHODS = [
+  {
+    title: 'UPI',
+    svg: (
+      <svg viewBox="0 0 40 16" xmlns="http://www.w3.org/2000/svg" role="img">
+        <path d="M27 1l4 7-4 7-2-.5 3.6-6.5L28.8 1z" fill="#097939" />
+        <path d="M30.5 1l4 7-4 7-2-.5L36.1 8 32.4 1z" fill="#ED752E" />
+        <text x="1" y="12.4" fontFamily="Arial, Helvetica, sans-serif" fontWeight="700" fontSize="11" fill="#0C3F8C">UPI</text>
+      </svg>
+    ),
+  },
+  {
+    title: 'Visa',
+    svg: (
+      <svg viewBox="0 0 44 16" xmlns="http://www.w3.org/2000/svg" role="img">
+        <text x="2" y="13" fontFamily="Arial, Helvetica, sans-serif" fontStyle="italic" fontWeight="900" fontSize="13" letterSpacing=".5" fill="#1A1F71">VISA</text>
+      </svg>
+    ),
+  },
+  {
+    title: 'Mastercard',
+    svg: (
+      <svg viewBox="0 0 30 16" xmlns="http://www.w3.org/2000/svg" role="img">
+        <circle cx="12" cy="8" r="6.4" fill="#EB001B" />
+        <circle cx="18" cy="8" r="6.4" fill="#F79E1B" fillOpacity=".9" />
+      </svg>
+    ),
+  },
+  {
+    title: 'RuPay',
+    svg: (
+      <svg viewBox="0 0 44 16" xmlns="http://www.w3.org/2000/svg" role="img">
+        <text x="1" y="12.6" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="11.5">
+          <tspan fill="#0C7B3E">Ru</tspan><tspan fill="#F26E22">Pay</tspan>
+        </text>
+      </svg>
+    ),
+  },
+  {
+    title: 'American Express',
+    svg: (
+      <svg viewBox="0 0 44 16" xmlns="http://www.w3.org/2000/svg" role="img">
+        <rect width="44" height="16" rx="2" fill="#2E77BC" />
+        <text x="22" y="11.4" textAnchor="middle" fontFamily="Arial, Helvetica, sans-serif" fontWeight="800" fontSize="7.4" letterSpacing=".4" fill="#fff">AMEX</text>
+      </svg>
+    ),
+  },
+  {
+    title: 'Net Banking',
+    svg: (
+      <svg viewBox="0 0 20 16" xmlns="http://www.w3.org/2000/svg" role="img" fill="none" stroke="#1C1710" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10 2l8 4H2z" />
+        <path d="M3.5 6.5v6M8 6.5v6M12 6.5v6M16.5 6.5v6" />
+        <path d="M2 14h16" />
+      </svg>
+    ),
+  },
+];
+
 export default function CheckoutForm() {
   const router = useRouter();
   const [form, setForm] = useState({ fname: '', lname: '', email: '', phone: '', town: '' });
@@ -262,7 +327,6 @@ export default function CheckoutForm() {
               <div className={`co-field${hasError('phone') ? ' has-error' : ''}`} id="f-phone">
                 <label className="main" htmlFor="phone">
                   Phone Number <span className="req">*</span>
-                  <span className="note">For WhatsApp reminders</span>
                 </label>
 
                 <div className="co-phone" ref={flagBoxRef}>
@@ -367,7 +431,11 @@ export default function CheckoutForm() {
           </div>
         </form>
 
-        {/* ═══ RIGHT · ORDER SUMMARY (rides ABOVE the form ≤900px) ════════ */}
+        {/* ═══ RIGHT · ORDER SUMMARY (rides ABOVE the form ≤900px) ════════
+            Anatomy matched to the reference: title + price row → disclosure
+            toggle → a tinted "what's included" panel with filled ticks and an
+            inline footer → ruled price line → total. No product thumbnail —
+            the reference summary carries none. */}
         <aside className="co-summary">
           <div className="co-card">
             <div className="co-sum-head">
@@ -376,12 +444,9 @@ export default function CheckoutForm() {
             </div>
 
             <div className="co-prod">
-              <div className="co-prod-img co-prod-ic" aria-hidden="true">
-                <Ico id="chat" className="ico" />
-              </div>
               <div className="co-prod-info">
                 <div className="co-prod-title">
-                  <h3>The Reset Hormone Diagnosis Call</h3>
+                  <h3>1:1 Diagnostic Call with Shruti</h3>
                   <span className="co-prod-price"><Price /></span>
                 </div>
                 <button
@@ -404,43 +469,45 @@ export default function CheckoutForm() {
                 <div className={`co-prod-more${detailsOpen ? ' on' : ''}`} id="co-prod-more">
                   <div className="co-prod-more-inner">
                     <p className="co-more-eyebrow">
-                      Personalised consultation · {CONFIG.CALL_MINUTES} min · Refundable
+                      Personalised consultation · 1:1 With Shruti
                     </p>
                     {/* COPY.md · PAGE 2 — these three, in this order. Item 2 is
                         the highest-leverage line on the page: volunteering that
                         she might be disqualified is what makes ₹97 read as safe
                         rather than as a trap. */}
                     <ul className="co-more-list">
-                      <li>Personalised <strong>Hormone Diagnosis &amp; {CONFIG.PROGRAMME_DAYS}-Day Reset Roadmap</strong></li>
-                      <li>An honest fit check — <strong>if Reset isn’t right for you, Shruti will say so and refund your <Price /></strong></li>
-                      <li>A walk-through of the <strong>{CONFIG.PROGRAMME_WEEKS}-week programme</strong> and your path forward</li>
+                      <li>Personalised Hormone Diagnosis &amp; {CONFIG.PROGRAMME_DAYS}-Day Reset Roadmap</li>
+                      <li>An honest fit check — if Reset isn’t right for you, Shruti will tell you honestly, with no pressure to enrol</li>
+                      <li>A walk-through of the {CONFIG.PROGRAMME_WEEKS}-week programme and your path forward</li>
                     </ul>
+                    {/* <p className="co-more-foot">Refundable · Secure checkout</p> */}
                   </div>
                 </div>
 
                 {/* No struck anchor and no discount row — see p01-checkout.css. */}
                 <div className="co-prices">
-                  <div className="co-price-row">
+                  {/* <div className="co-price-row">
                     <span className="lbl">Diagnosis call</span>
                     <span className="val"><Price /></span>
-                  </div>
+                  </div> */}
                   <div className="co-divider" />
                 </div>
 
                 <div className="co-total-row">
-                  <span className="lbl">Total today</span>
+                  <span className="lbl">Total due today</span>
                   <span className="new"><Price /></span>
                 </div>
 
-                {/* ARJ paints branded logo SVGs here; one-hue rule → text pills. */}
+                {/* Branded payment marks. Third-party logos keep their real
+                    colours (C12 — never recolour a mark to fit a palette), so
+                    these sit outside the one-hue rule exactly as the flags do. */}
                 <div className="co-pm">
                   <span className="lbl">Accepted payment methods</span>
-                  <span className="pm-badge">UPI</span>
-                  <span className="pm-badge">Visa</span>
-                  <span className="pm-badge">Mastercard</span>
-                  <span className="pm-badge">RuPay</span>
-                  <span className="pm-badge">Net Banking</span>
-                  <span className="pm-badge">Wallets</span>
+                  {PAY_METHODS.map((m) => (
+                    <span className="pm-badge" key={m.title} title={m.title} aria-label={m.title}>
+                      {m.svg}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -458,15 +525,8 @@ export default function CheckoutForm() {
             <ul className="co-paytrust">
               <li><Ico id="lock" className="ico" /> 256-bit SSL</li>
               <li><Ico id="shield" className="ico" /> PCI Compliant</li>
-              <li><Ico id="check" className="ico" /> <Price /> Fully Refundable</li>
+              <li><Ico id="check" className="ico" /> 90-Day Money-Back Guarantee</li>
             </ul>
-
-            {/* Contractual, and fixed (SESSION-HANDOFF §8B): the ₹97 entry fee is
-                refundable. The programme's terms are NOT stated on this page. */}
-            <p className="co-guarantee">
-              Fully refundable if the call doesn’t happen, or if you finish it and it wasn’t worth
-              your time. {CONFIG.CALL_MINUTES} minutes, 1:1 with Shruti.
-            </p>
           </div>
         </aside>
       </div>

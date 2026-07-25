@@ -32,39 +32,6 @@ export default function Icons() {
       <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.6c0 4-3.8 7.2-8.5 7.2a9.7 9.7 0 01-2.8-.4L4.5 20l1.3-3.5a6.9 6.9 0 01-2.3-5c0-4 3.8-7.2 8.5-7.2s8.5 3.2 8.5 7.3z" /></symbol>
       <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.6l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.6l-5.9 3 1.2-6.5L2.5 9.5l6.6-.9z" /></symbol>
       <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4" /><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6" /></symbol>
-      {/* ── Added by the `thank-you` session (Track B). Seven marks the
-          post-conversion pages needed and the family did not have. No
-          presentation attributes: stroke, fill and width stay in CSS so a
-          consumer can size and colour them from currentColor. ── */}
-      <symbol id="i-calendar" viewBox="0 0 24 24">
-        <rect x="3.2" y="5.4" width="17.6" height="15.4" rx="2.2" />
-        <path d="M16 3.2v4.2M8 3.2v4.2M3.2 11h17.6M9.2 15.4l2 2 3.6-3.8" />
-      </symbol>
-      <symbol id="i-info" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="9.2" />
-        <path d="M12 7.6v.2M12 11v5.6" />
-      </symbol>
-      <symbol id="i-file" viewBox="0 0 24 24">
-        <path d="M13.8 2.8H6.6a2 2 0 00-2 2v14.4a2 2 0 002 2h10.8a2 2 0 002-2V8.4z" />
-        <path d="M13.8 2.8v5.6h5.6M8.8 13.4h6.4M8.8 17h4.4" />
-      </symbol>
-      <symbol id="i-pill" viewBox="0 0 24 24">
-        <rect x="4.4" y="8.4" width="15.2" height="11.8" rx="2.4" />
-        <path d="M12 8.4V4.2M9 4.2h6" />
-        <circle cx="12" cy="14.3" r="2" />
-      </symbol>
-      <symbol id="i-plate" viewBox="0 0 24 24">
-        <circle cx="12" cy="12" r="8.8" />
-        <circle cx="12" cy="12" r="4.6" />
-      </symbol>
-      <symbol id="i-repeat" viewBox="0 0 24 24">
-        <path d="M4 11.2A8 8 0 0117.6 6.6l2.4 2.2M20 12.8A8 8 0 016.4 17.4L4 15.2" />
-        <path d="M20 4.6v4.2h-4.2M4 19.4v-4.2h4.2" />
-      </symbol>
-      <symbol id="i-eye" viewBox="0 0 24 24">
-        <path d="M2.4 12S6 5.6 12 5.6 21.6 12 21.6 12 18 18.4 12 18.4 2.4 12 2.4 12z" />
-        <circle cx="12" cy="12" r="3" />
-      </symbol>
     </svg>
   );
 }

@@ -97,7 +97,7 @@ export default function S07Included() {
       <span className="eyebrow reveal">The programme</span>
       <h2 className="reveal">
         What’s Included In Your{' '}
-        <span className="incl-accent">{CONFIG.PROGRAMME_WEEKS}-Week Reset</span>
+        <span className="incl-accent">{CONFIG.PROGRAMME_WEEKS}-Week Programme</span>
       </h2>
       <p className="incl-lede reveal" data-d="1">
         Everything working together, so the weight that comes off is{' '}

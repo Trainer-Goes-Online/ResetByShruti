@@ -28,7 +28,7 @@ export default function CtaBlock({ micro = false, style }) {
 {/* 
       {micro && (
         <p className="cta-micro">
-          <Price /> to book · {CONFIG.CALL_MINUTES} minutes, 1:1 with Shruti · fully refundable
+          <Price /> to book · {CONFIG.CALL_MINUTES} minutes, 1:1 with Shruti
         </p>
       )} */}
 

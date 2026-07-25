@@ -40,7 +40,7 @@ export default function CheckoutPage() {
         <div className="co-wrap">
           <span className="itm"><Ico id="lock" className="ico" /> Secure Checkout</span>
           <span className="sep" />
-          <span className="itm"><Ico id="shield" className="ico" /> <Price /> Fully Refundable</span>
+          <span className="itm"><Ico id="shield" className="ico" /> Privacy Protected</span>
           <span className="sep" />
           <span className="itm"><Ico id="check" className="ico" /> Razorpay Verified · 256-bit SSL</span>
         </div>

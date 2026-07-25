@@ -23,7 +23,6 @@
 import Link from 'next/link';
 import { Ico } from '@/components/Icons';
 import CtaBlock from '@/components/CtaBlock';
-import Price from '@/components/Price';
 import { CONFIG, CTA_STRING } from '@/lib/config';
 import { FAQS } from '@/lib/content';
 
@@ -65,9 +64,9 @@ export default function S09FaqFinale() {
         id="finale" is the hook FunnelEffects uses to retract the sticky bar
         once a real CTA is on screen. */}
     <div className="faq-cta" id="finale">
-      <p className="eyebrow center finale-eyebrow">
+      {/* <p className="eyebrow center finale-eyebrow">
         And it all starts with a {CONFIG.CALL_MINUTES}-minute call
-      </p>
+      </p> */}
       <h2 className="finale-line reveal">
         Become The Woman Who Stopped <em>Negotiating With Her Own Body.</em>
       </h2>
@@ -125,7 +124,7 @@ export default function S09FaqFinale() {
     <ul className="stuck-trust">
       <li>
         <span className="trust-ic"><Ico id="shield" className="ico ico-sm" /></span>
-        <b><Price /></b>&nbsp;Fully Refundable
+        <b>100%</b>&nbsp;Money-Back Guarantee
       </li>
       <li>
         <span className="trust-ic"><Ico id="users" className="ico ico-sm" /></span>

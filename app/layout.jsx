@@ -29,7 +29,7 @@ const SITE = CONFIG.CANONICAL_HOST;
 const TITLE =
   'Reset by Shruti Solanki — PCOS, Thyroid & Insulin Resistance, Treated Together';
 const DESCRIPTION =
-  'The 90-day programme for women whose PCOS, thyroid and insulin resistance are all happening at once. ₹97, fully refundable, books a 30-minute 1:1 with Shruti.';
+  'The 90-day programme for women whose PCOS, thyroid and insulin resistance are all happening at once — backed by a 100% money-back guarantee. A ₹97 call books a 30-minute 1:1 with Shruti.';
 
 export const metadata = {
   metadataBase: new URL(SITE),

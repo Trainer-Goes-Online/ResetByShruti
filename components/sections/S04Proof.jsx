@@ -108,13 +108,13 @@ function CaseSet({ clone = false }) {
         </article>
       ))}
 
-      <article className="tcard tcard-more case-card">
+      {/* <article className="tcard tcard-more case-card">
         <div>
           <div className="num">{CONFIG.CLIENT_COUNT}</div>
           <div className="ttl">Women Coached</div>
           <p>A handful of their stories are here. The rest stay private.</p>
         </div>
-      </article>
+      </article> */}
     </div>
   );
 }
