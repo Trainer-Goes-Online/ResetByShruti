@@ -17,8 +17,12 @@ const RZP_ORDERS = 'https://api.razorpay.com/v1/orders';
 const trunc = (s, n = 256) => (s == null ? '' : String(s).slice(0, n));
 
 export async function POST(req) {
-  const keyId = process.env.RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY;
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  /* Accept every naming convention so a mislabelled env var can't silently
+     503 the checkout: RAZORPAY_KEY_ID / RAZORPAY_KEY (public id) and
+     RAZORPAY_KEY_SECRET / RAZORPAY_SECRET (secret). */
+  const keyId = process.env.RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY
+    || process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.NEXT_PUBLIC_RAZORPAY_KEY;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_SECRET;
   if (!keyId || !keySecret) return NextResponse.json({ ok: false, error: 'razorpay_not_configured' }, { status: 503 });
 
   let body = {};

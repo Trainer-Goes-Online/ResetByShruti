@@ -14,7 +14,7 @@ import crypto from 'crypto';
 export const runtime = 'nodejs';
 
 export async function POST(req) {
-  const keySecret = process.env.RAZORPAY_KEY_SECRET;
+  const keySecret = process.env.RAZORPAY_KEY_SECRET || process.env.RAZORPAY_SECRET;
   if (!keySecret) return NextResponse.json({ ok: false, error: 'not_configured' }, { status: 503 });
 
   let body = {};
