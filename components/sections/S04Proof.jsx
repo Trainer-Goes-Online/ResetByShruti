@@ -62,7 +62,7 @@ export default function S04Proof() {
             </span>
             <span className="tcard-body">
               <span className="nm">{v.name}</span>
-              <span className="meta"><Gap>{v.gap}</Gap></span>
+              {/* <span className="meta"><Gap>{v.gap}</Gap></span> */}
             </span>
           </button>
         );

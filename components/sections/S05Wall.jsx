@@ -82,9 +82,9 @@ export default function S05Wall() {
   <Row slides={ROW_1} dir="ltr" />
   <Row slides={ROW_2} dir="rtl" className="gal-row2" />
 
-  <div className="wrap">
+  {/* <div className="wrap">
     <p className="center mt-m"><Gap>PII pass + consent pending · Q14.1</Gap></p>
-  </div>
+  </div> */}
 </section>
 
     </>
