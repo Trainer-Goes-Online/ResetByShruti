@@ -72,7 +72,7 @@ export default function S04Proof() {
     {/* ── 13b · written case files — a MOVING CAROUSEL (mirrors the message-wall
         marquee: the set is authored twice so the -50% translate loops
         seamlessly; it is real HTML before JS and pauses on hover/focus). ── */}
-    <div className="case-row" aria-label="Client transformations">
+    <div className="case-row" data-marquee="60" data-dir="ltr" aria-label="Client transformations">
       <div className="case-track">
         <CaseSet />
         <CaseSet clone />

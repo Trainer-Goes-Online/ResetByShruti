@@ -39,10 +39,21 @@ export default function CtaBlock({ micro = false, style }) {
       </ul>
 
       {/* Countdown slot — same position as the references. Filled by
-          FunnelEffects only against a real deadline or a real intake cap. */}
+          FunnelEffects only against a real deadline or a real intake cap.
+
+          The three segments are authored HERE, in server markup, rather than
+          injected as an HTML string from the effect: the plate then has its
+          final geometry before any JS runs, so it cannot reflow the CTA block
+          underneath it on hydration. FunnelEffects only rewrites the digits. */}
       <div className="countdown" data-urgency style={{ display: 'none' }}>
-        <span className="cd-label">Offer ends in</span>
-        <span className="cd-clock u-text" />
+        <span className="cd-label">Offer<br />ends in</span>
+        <span className="cd-clock u-text">
+          <span className="cd-seg"><b data-cd="h">00</b><i>Hrs</i></span>
+          <span className="cd-sep" aria-hidden="true">:</span>
+          <span className="cd-seg"><b data-cd="m">00</b><i>Min</i></span>
+          <span className="cd-sep" aria-hidden="true">:</span>
+          <span className="cd-seg"><b data-cd="s">00</b><i>Sec</i></span>
+        </span>
       </div>
     </div>
   );

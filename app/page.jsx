@@ -29,7 +29,9 @@ export default function LandingPage() {
       <div className="credband">
         <div className="credband-inner">
           <span>
-            300+ WOMEN TRANSFORMED
+            {/* The metric carries the brand colour, the qualifier stays ink —
+                same split as "5-15 KGS lost per client" beside it. */}
+            <b>300+</b> WOMEN TRANSFORMED
           </span>
           <span className="sep" />
           <span><b>5-15 KGS</b> LOST PER CLIENT </span>

@@ -49,10 +49,12 @@ function Set({ slides, clone = false }) {
   );
 }
 
-/* ARJ CarouselRow — chassis + track + set + cloned set. */
+/* ARJ CarouselRow — chassis + track + set + cloned set.
+   data-marquee is the hook FunnelEffects drives; its value is the seconds one
+   set takes to travel past, i.e. the old CSS animation-duration. */
 function Row({ slides, dir, className = '' }) {
   return (
-    <div className={`gal-row ${className}`.trim()} data-dir={dir}>
+    <div className={`gal-row ${className}`.trim()} data-dir={dir} data-marquee="40">
       <div className="gal-track">
         <Set slides={slides} />
         <Set slides={slides} clone />
