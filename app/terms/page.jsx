@@ -56,7 +56,7 @@ export default function TermsPage() {
         <p>
           We may discuss blood markers such as TSH and HbA1c in order to build your plan around
           them, but this is not a diagnosis and does not replace medical care. Never start, stop
-          or change any medication because of anything in this programme — that is between you and
+          or change any medication because of anything in this programme; that is between you and
           your doctor. Please consult a qualified doctor before making changes to your diet or
           exercise, particularly if you are pregnant, trying to conceive, breastfeeding, diabetic
           or managing any other condition. PCOS and thyroid conditions are managed, not cured.
@@ -68,7 +68,7 @@ export default function TermsPage() {
         Results depend on your body, your history and your consistency. The transformations and
         testimonials shown on this site are the real experiences of past clients; they are
         individual outcomes and are not typical, promised or guaranteed. Our one promise is that
-        you will feel lighter — less bloating and puffiness — within the first fourteen days. No
+        you will feel lighter (less bloating and puffiness) within the first fourteen days. No
         specific weight, measurement or blood-marker outcome is promised.
       </p>
 
@@ -76,7 +76,7 @@ export default function TermsPage() {
       <p>
         The ₹{CONFIG.ENTRY_PRICE} booking fee for the diagnostic call is a one-time charge for that
         consultation and is <strong>non-refundable</strong>. The Reset 90-day programme is a
-        separate enrolment and is backed by a <strong>100% Money-Back Guarantee</strong> — if you
+        separate enrolment and is backed by a <strong>100% Money-Back Guarantee</strong>: if you
         follow your personalised plan and meet the participation requirements but do not reach the
         agreed result, your programme fee is refunded in full. Full details, eligibility and the
         refund process are in our <a href="/refund-policy">Refund Policy</a>, which forms part of
@@ -85,8 +85,8 @@ export default function TermsPage() {
 
       <h2>6. Intellectual property</h2>
       <p>
-        All content on this site and within the programme — text, designs, frameworks, protocols,
-        templates and videos — belongs to us. You get a personal, non-transferable licence to use
+        All content on this site and within the programme (text, designs, frameworks, protocols,
+        templates and videos) belongs to us. You get a personal, non-transferable licence to use
         your own material for yourself. Please do not copy, share, resell or republish it.
       </p>
 

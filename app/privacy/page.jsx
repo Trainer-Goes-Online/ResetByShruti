@@ -29,7 +29,7 @@ export default function PrivacyPage() {
       <p>
         Reset by Shruti Solanki ("we", "us") respects your privacy. This policy explains what we
         collect, why, and how we look after it. Because this is a health coaching practice, some
-        of what you share is about your body — we treat that as the sensitive information it is.
+        of what you share is about your body; we treat that as the sensitive information it is.
       </p>
 
       <h2>1. Information we collect</h2>
@@ -37,20 +37,20 @@ export default function PrivacyPage() {
         <li>Your name, email address and phone number, when you book a call.</li>
         <li>Your town or city.</li>
         <li>
-          What you choose to tell us about your health, lifestyle and goals — such as your
+          What you choose to tell us about your health, lifestyle and goals, such as your
           diagnoses, symptoms, cycle, medication, weight and eating patterns.
         </li>
         <li>
           Payment confirmation from Razorpay. We never see or store your card, UPI or bank
-          details — those go directly to Razorpay.
+          details; those go directly to Razorpay.
         </li>
-        <li>Basic technical data — IP address, browser and device type — collected automatically.</li>
+        <li>Basic technical data (IP address, browser and device type), collected automatically.</li>
       </ul>
 
       <h2>2. How we use it</h2>
       <ul>
         <li>To schedule and run your call, and to build and adjust your plan.</li>
-        <li>To contact you about your booking — confirmations, reminders and prep notes.</li>
+        <li>To contact you about your booking: confirmations, reminders and prep notes.</li>
         <li>To take payment and issue refunds through Razorpay.</li>
         <li>To improve our service.</li>
         <li>To send you programme updates, where you have agreed to receive them.</li>
@@ -70,9 +70,9 @@ export default function PrivacyPage() {
         services to run the business, each with its own privacy policy:
       </p>
       <ul>
-        <li><strong>Razorpay</strong> — to process payments.</li>
-        <li><strong>Calendly</strong> — to schedule your call.</li>
-        <li><strong>WhatsApp and email providers</strong> — to send confirmations and reminders.</li>
+        <li><strong>Razorpay</strong>, to process payments.</li>
+        <li><strong>Calendly</strong>, to schedule your call.</li>
+        <li><strong>WhatsApp and email providers</strong>, to send confirmations and reminders.</li>
       </ul>
       <p>We may also disclose information where the law requires it.</p>
 

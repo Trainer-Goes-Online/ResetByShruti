@@ -2404,6 +2404,42 @@ body.locked { overflow: hidden; }
     color-mix(in srgb, var(--brand) 0%,  transparent) 100%);
 }
 
+/* ── DESKTOP: the rule has to follow the TEXT, not the box ──────────────────
+   The inline-block above only behaves while the accent phrase fits on one
+   line. In the two-column desktop layout it does not: shrink-to-fit resolves
+   an inline-block whose text wraps to the FULL available width, so the ::after
+   bar (left:0 → right:0) stretched the entire 578px column and landed across
+   the paragraph beneath it. Being a 578px-wide block, it also could not sit
+   beside the preceding words, which is why the accent was forced onto its own
+   line to begin with.
+
+   Going back to display:inline fixes both: the phrase rejoins the sentence
+   flow, and the rule is painted as a background gradient with
+   box-decoration-break:clone, so each wrapped fragment gets its own correctly
+   sized rule instead of one bar across the column.
+
+   Scoped to the desktop layout only — the stacked layout at ≤900px is
+   deliberately left on the original inline-block rule. */
+@media (min-width: 901px) {
+  .coach-text h2 span {
+    display: inline;
+    -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+    background-image: linear-gradient(90deg,
+      color-mix(in srgb, var(--brand) 0%,  transparent)   0%,
+      color-mix(in srgb, var(--brand) 55%, transparent)   6%,
+      color-mix(in srgb, var(--brand) 55%, transparent)  94%,
+      color-mix(in srgb, var(--brand) 0%,  transparent) 100%);
+    background-repeat: no-repeat;
+    background-size: 100% 3px;
+    background-position: 0 100%;
+  }
+  .coach-text h2 span::after { content: none; }
+  /* 1.16 leaves the rule almost touching the ink of the line below it once
+     there IS a line below it. A hair more leading buys the clearance. */
+  .coach-text h2 { line-height: 1.24; }
+}
+
 /* ARJ .af-about-text p — 15.5px, ink-soft, lh 1.75 (landing.css:637 +
    landing-premium.css:1436) */
 .coach-text p {

@@ -408,7 +408,7 @@ export default function CheckoutForm() {
 
                 <p className="co-err">
                   <Ico id="x" className="ico" />
-                  <span>Please enter a valid mobile number (6–15 digits)</span>
+                  <span>Please enter a valid mobile number (6-15 digits)</span>
                 </p>
               </div>
             </div>
@@ -477,7 +477,7 @@ export default function CheckoutForm() {
                         rather than as a trap. */}
                     <ul className="co-more-list">
                       <li>Personalised Hormone Diagnosis &amp; {CONFIG.PROGRAMME_DAYS}-Day Reset Roadmap</li>
-                      <li>An honest fit check — if Reset isn’t right for you, Shruti will tell you honestly, with no pressure to enrol</li>
+                      <li>An honest fit check: if Reset isn’t right for you, Shruti will tell you honestly, with no pressure to enrol</li>
                       <li>A walk-through of the {CONFIG.PROGRAMME_WEEKS}-week programme and your path forward</li>
                     </ul>
                     {/* <p className="co-more-foot">Refundable · Secure checkout</p> */}

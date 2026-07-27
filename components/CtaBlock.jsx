@@ -33,7 +33,7 @@ export default function CtaBlock({ micro = false, style }) {
       )} */}
 
       <ul className="triad">
-        <li><Ico id="shield" className="ico ico-sm" />100% Client Satisfaction </li>
+        <li><Ico id="shield" className="ico ico-sm" /> <b>100%</b>&nbsp;Money-Back Guarantee</li>
         <li><Ico id="users" className="ico ico-sm" /> <b>{CONFIG.CLIENT_COUNT}</b>&nbsp;Success Stories</li>
         <li><Ico id="spark" className="ico ico-sm" /> Trusted by Women Globally</li>
       </ul>
