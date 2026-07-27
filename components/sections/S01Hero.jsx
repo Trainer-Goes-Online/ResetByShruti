@@ -35,6 +35,12 @@ export default function S01Hero() {
           <span className="cred-av">
             <img src="/img/Icons/Women_Icon2.jpeg" alt="" loading="lazy" />
           </span>
+          <span className="cred-av">
+            <img src="/img/Icons/Women_Icon3.jpeg" alt="" loading="lazy" />
+          </span>
+          <span className="cred-av">
+            <img src="/img/Icons/Women_Icon4.jpeg" alt="" loading="lazy" />
+          </span>
           {CONFIG.VIDEO_2 && (
             <span className="cred-av">
               <video src={`${CONFIG.VIDEO_2}#t=1.5`} muted playsInline preload="metadata" />

@@ -1539,9 +1539,12 @@ body.locked { overflow: hidden; }
   gap: 24px; max-width: 860px; margin: 0 auto;
 }
 
-/* The video row is the one place we depart: three portrait clips, so three
-   columns. Same shell, same gap, same 860px measure — the grids line up. */
-.proof .tcards-vid { grid-template-columns: repeat(3, 1fr); margin-bottom: 24px; }
+/* Four portrait clips → a 2×2 grid on desktop (matches the written-case grid
+   width, so the two blocks line up). Collapses to one column on mobile. */
+.proof .tcards-vid { grid-template-columns: repeat(2, 1fr); margin-bottom: 24px; }
+
+/* Testimonial name centred within the video card, on every device. */
+.proof .tcard-vid .tcard-body { align-items: center; text-align: center; }
 
 
 /* ----------------------------------------------------------------------------
