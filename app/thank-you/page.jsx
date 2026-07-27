@@ -32,7 +32,7 @@ export const metadata = {
    (PCOS · thyroid · insulin resistance). Every line maps to one of FFC's, so
    nothing here is invented; the last keeps our contractual refund posture. */
 const COVER = [
-  'What is actually happening underneath — whether it is PCOS, thyroid, insulin resistance, or all three at once — and why your body stopped responding to the things that used to work.',
+  'What is actually happening underneath (whether it is PCOS, thyroid, insulin resistance, or all three at once) and why your body stopped responding to the things that used to work.',
   'Why the previous approaches did not last, and what that tells us about what your body actually needs right now.',
   'How your weight, your markers and your week are connected, and which one we start with.',
   'What it would realistically take to shift what you are experiencing, including the parts that take months rather than weeks.',
@@ -54,7 +54,7 @@ export default function ThankYouPage() {
       {/* ── HEADER ───────────────────────────────────────────────────────── */}
       {/* <header className="ty-topbar">
         <div className="wrap">
-          <Link href="/" className="ty-mark" aria-label="Reset by Shruti Solanki — home">
+          <Link href="/" className="ty-mark" aria-label="Reset by Shruti Solanki, home">
             Reset
           </Link>
         </div>
@@ -102,7 +102,7 @@ export default function ThankYouPage() {
                     <p>{s}</p>
                   ) : (
                     <p>
-                      Your call link and details are on their way to your email — check your spam
+                      Your call link and details are on their way to your email. Check your spam
                       folder if you do not see it.
                     </p>
                   )}

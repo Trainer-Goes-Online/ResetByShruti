@@ -8,7 +8,7 @@
    lead per item, and the refundable-fee note as the last line.
 
    Copy is the client's own (project file): a 100% money-back guarantee tied to
-   a 4–10 kg result over the 90-day programme.
+   a 4-10 kg result over the 90-day programme.
    ========================================================================== */
 
 export default function S08Guarantee() {
@@ -37,7 +37,7 @@ export default function S08Guarantee() {
 
     <div className="guar-lede reveal" data-d="2">
       <p>
-        If you don’t lose between <strong>4–10 kilos</strong> within your{' '}
+        If you don’t lose between <strong>4-10 kilos</strong> within your{' '}
         <strong>90-day programme</strong>, we’ll refund every rupee you paid us.
       </p>
     </div>
@@ -60,7 +60,7 @@ export default function S08Guarantee() {
           </span>
           <span>
             <strong>Your starting BMI is above 25.</strong> If you’re already close to a healthy
-            weight for your height, losing 5–10 kilos may not be physiologically appropriate. In
+            weight for your height, losing 4-10 kilos may not be physiologically appropriate. In
             that case, we’ll agree on a personalised transformation goal with you during your
             consultation before you enrol.
           </span>

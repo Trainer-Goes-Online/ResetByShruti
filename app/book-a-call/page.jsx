@@ -46,11 +46,11 @@ export const metadata = {
 export default function BookACallPage() {
   const waHref = CONFIG.WHATSAPP_NUMBER
     ? `https://wa.me/${CONFIG.WHATSAPP_NUMBER}?text=${encodeURIComponent(
-        'Hi Shruti — I’ve paid for my Reset call but none of the times on the calendar work for me. My name, email and preferred day/time are: '
+        'Hi Shruti, I’ve paid for my Reset call but none of the times on the calendar work for me. My name, email and preferred day/time are: '
       )}`
     : undefined;
   const mailHref = CONFIG.SUPPORT_EMAIL
-    ? `mailto:${CONFIG.SUPPORT_EMAIL}?subject=${encodeURIComponent('Reset call — preferred slot not available')}`
+    ? `mailto:${CONFIG.SUPPORT_EMAIL}?subject=${encodeURIComponent('Reset call: preferred slot not available')}`
     : undefined;
 
   return (
@@ -115,7 +115,7 @@ export default function BookACallPage() {
             </div>
             <div className="bk-trust-item">
               <span className="bk-trust-tick"><Ico id="check" /></span>
-              <span><strong>Rescheduling for genuine emergencies only</strong> — the slot is held for you, not resold.</span>
+              <span><strong>Rescheduling for genuine emergencies only.</strong> The slot is held for you, not resold.</span>
             </div>
           </div>
         </section>
@@ -179,7 +179,7 @@ export default function BookACallPage() {
           </p>
           <p className="bk-noshow-punch">
             Three weeks later: the same body, the same frustration, and a <Price /> spent on
-            nothing. You’re already through the hardest part — take the next thirty seconds and
+            nothing. You’re already through the hardest part. Take the next thirty seconds and
             pick a slot.
           </p>
           <a href="#bk-calendar" className="bk-cta">
@@ -201,7 +201,7 @@ export default function BookACallPage() {
             <div className="a">
               <div>
                 <p>
-                  Yes. Every call is 1:1 with Shruti herself — no team member, no assistant, no
+                  Yes. Every call is 1:1 with Shruti herself: no team member, no assistant, no
                   junior coach. She runs every one personally, because the diagnosis is only as
                   sharp as the person reading your markers.
                 </p>

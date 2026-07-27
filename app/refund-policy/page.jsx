@@ -68,7 +68,7 @@ export default function RefundPolicyPage() {
 
       <h2>4. Healthy BMI Clause</h2>
       <p>
-        The 5-10 kg guarantee applies to clients whose <strong>starting BMI is above 25.</strong>
+        The 4-10 kg guarantee applies to clients whose <strong>starting BMI is above 25.</strong>
       </p>
       <p>
         If you are already within a healthy BMI range for your height, losing 4-10 kg may not be

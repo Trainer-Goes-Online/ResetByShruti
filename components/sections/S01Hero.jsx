@@ -125,7 +125,7 @@ export default function S01Hero() {
       <div className="vsl-ph">
         <span className="playdisc"><Ico id="play" /></span>
         {!CONFIG.VSL_VIMEO_URL && (
-          <span className="eyebrow ph-note">Placeholder — VSL not yet recorded (Q6.1)</span>
+          <span className="eyebrow ph-note">Placeholder: VSL not yet recorded (Q6.1)</span>
         )}
       </div>
     </div>
