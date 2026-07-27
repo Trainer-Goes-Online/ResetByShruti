@@ -1,5 +1,5 @@
 import Script from 'next/script';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Newsreader, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Icons from '@/components/Icons';
 import Lightbox from '@/components/Lightbox';
@@ -8,18 +8,30 @@ import { CONFIG } from '@/lib/config';
 
 /* C1 · three voices. display = emotion & authorship · mono = spec/precision ·
    sans = neutral body. Loaded through next/font so they are self-hosted and
-   never block first paint on a third-party request. */
-/* Measured from teamfitarjun.com: Playfair Display 700 for display, Inter for
-   everything else. The reference uses NO mono voice — its eyebrows are Inter
-   700 uppercase — so --f-mono maps to the same family rather than introducing
-   a third face the reference does not have. */
-const playfair = Playfair_Display({
-  subsets: ['latin'], weight: ['600', '700', '800'], style: ['normal', 'italic'],
-  variable: '--f-display', display: 'swap',
+   never block first paint on a third-party request.
+
+   The funnel now runs a real three-voice system (client direction):
+     display  Newsreader      — every h1/h2/h3 and display number
+     body     Inter           — unchanged
+     eyebrow  JetBrains Mono  — the uppercase wide-tracked labels above heads
+
+   ⚠ Each face exposes its OWN variable (--f-newsreader / --f-inter /
+   --f-jetbrains) and globals.css maps them onto --fh/--fb/--fm. Binding
+   next/font straight to --f-display the way this file used to do put the
+   generated stylesheet and the :root block in a same-specificity race for the
+   same custom property — it only ever looked correct because both sides
+   happened to name Playfair. Separate names remove the race entirely. */
+const newsreader = Newsreader({
+  subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
+  style: ['normal', 'italic'], variable: '--f-newsreader', display: 'swap',
 });
 const inter = Inter({
   subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
-  variable: '--f-sans', display: 'swap',
+  variable: '--f-inter', display: 'swap',
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
+  variable: '--f-jetbrains', display: 'swap',
 });
 
 /* metadataBase makes every page's canonical + Open Graph URL resolve to the
@@ -61,7 +73,7 @@ export default function RootLayout({ children }) {
      gold accent against forest ink. Set data-accent="emerald" here to swap the
      whole funnel to the green accent — one attribute, no stylesheet edit. */
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+    <html lang="en" className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
         {/* ── Analytics + Pixel (afterInteractive so they never block paint) ──
             GA4 + Clarity carry no monetary values and are independent of Meta.

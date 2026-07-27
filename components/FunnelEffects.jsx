@@ -299,6 +299,165 @@ export default function FunnelEffects() {
       }
     }
 
+    /* ------------------------------------------------ SLIDEABLE MARQUEES
+       Every [data-marquee] row — the two message-wall rows and the case-file
+       row — is a native horizontal scroll container whose set is authored
+       twice. Autoplay is a scrollLeft loop rather than a CSS transform, which
+       is what makes the row draggable: the visitor and the loop are now moving
+       the SAME property, so a swipe or a click-drag simply takes over instead
+       of fighting a transform that owns the element.
+
+       The wrap is by half the scroll width — one full set — so the seam is
+       invisible in both directions and the row can be pushed past either end
+       without ever running out of content.
+
+       Fails open: if this never runs the rows are static but still swipeable
+       and trackpad-scrollable, because that part is pure CSS. */
+    $$('[data-marquee]').forEach((row) => {
+      const track = row.firstElementChild;
+      if (!track) return;
+
+      const durSec = Number(row.getAttribute('data-marquee')) || 40;
+      const back = row.getAttribute('data-dir') === 'rtl';
+      let half = 0;
+      let pos = 0;
+      let hovering = false;
+      let dragging = false;
+      let holdUntil = 0;          /* grace period after a manual interaction */
+      let raf = 0;
+
+      /* scrollWidth halves because the set is rendered twice. Re-measured on
+         resize AND after images decode — a row measured before its lazy images
+         have intrinsic size would wrap at the wrong offset. */
+      const measure = () => {
+        const next = row.scrollWidth / 2;
+        if (next > 0 && Math.abs(next - half) > 1) {
+          half = next;
+          pos = back ? half : 0;
+          row.scrollLeft = pos;
+        }
+      };
+      measure();
+
+      const manual = () => hovering || performance.now() < holdUntil || reduced;
+
+      /* pos is tracked as a float and written to scrollLeft each frame. Adding
+         a sub-pixel delta straight onto scrollLeft would be rounded away at
+         these speeds and the row would never move at all. */
+      let last = 0;
+      const step = (ts) => {
+        raf = requestAnimationFrame(step);
+        const dt = last ? Math.min(ts - last, 64) : 0;
+        last = ts;
+        if (document.hidden || half <= 0) return;
+
+        /* Anything that moved the row other than this loop — a swipe, touch
+           momentum, a trackpad, an end-clamp — wins. Resyncing here rather
+           than yanking the row back to a stale pos is what lets autoplay
+           resume from wherever the visitor let go. */
+        if (Math.abs(row.scrollLeft - pos) > 2) pos = row.scrollLeft;
+
+        if (dragging || manual()) return;
+
+        pos += (back ? -1 : 1) * (half / durSec) * (dt / 1000);
+        if (pos >= half) pos -= half;
+        else if (pos < 0) pos += half;
+        row.scrollLeft = pos;
+      };
+      raf = requestAnimationFrame(step);
+      cleanups.push(() => cancelAnimationFrame(raf));
+
+      /* Native touch/trackpad scrolling moves scrollLeft with no pointer event
+         we drive, and a scroll container CLAMPS at both ends — so without this
+         a hard swipe parks the visitor against a dead edge. Re-entering by one
+         set is invisible because the second set is a copy of the first.
+
+         Two things keep this from ping-ponging at the seam. It only runs while
+         the row is under manual control (autoplay does its own wrapping on pos,
+         and its post-wrap position would otherwise trip the low branch every
+         cycle), and the thresholds are offset by a pixel so a row sitting
+         exactly on the boundary satisfies neither branch. */
+      const onScroll = () => {
+        if (half <= 0 || dragging || !manual()) return;
+        if (row.scrollLeft >= half + 1) row.scrollLeft -= half;
+        else if (row.scrollLeft < 1) row.scrollLeft += half;
+      };
+      row.addEventListener('scroll', onScroll, { passive: true });
+
+      const hold = () => { holdUntil = performance.now() + 1400; };
+
+      const onEnter = () => { hovering = true; };
+      const onLeave = () => { hovering = false; };
+      row.addEventListener('pointerenter', onEnter);
+      row.addEventListener('pointerleave', onLeave);
+      row.addEventListener('focusin', onEnter);
+      row.addEventListener('focusout', onLeave);
+
+      /* Mouse click-drag. Touch is deliberately left to the platform — its
+         native momentum scrolling is better than anything reimplemented here,
+         and preventDefault on a touch pointerdown would kill it. */
+      let startX = 0;
+      let startScroll = 0;
+      let moved = 0;
+
+      const onDown = (e) => {
+        if (e.pointerType !== 'mouse' || e.button !== 0) { hold(); return; }
+        dragging = true; moved = 0;
+        startX = e.clientX;
+        startScroll = row.scrollLeft;
+        row.classList.add('is-dragging');
+        try { row.setPointerCapture(e.pointerId); } catch {}
+        e.preventDefault();
+      };
+
+      const onMove = (e) => {
+        if (!dragging) return;
+        const dx = e.clientX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        row.scrollLeft = startScroll - dx;
+        pos = row.scrollLeft;
+      };
+
+      const onUp = (e) => {
+        if (!dragging) return;
+        dragging = false;
+        row.classList.remove('is-dragging');
+        try { row.releasePointerCapture(e.pointerId); } catch {}
+        hold();
+        /* A drag that crossed the slop threshold must not also fire the click
+           that would open the lightbox under the cursor. Swallowed once, in
+           the capture phase, before the delegated [data-img] handler sees it. */
+        if (moved > 6) {
+          const swallow = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+          row.addEventListener('click', swallow, { capture: true, once: true });
+          setTimeout(() => row.removeEventListener('click', swallow, true), 350);
+        }
+      };
+
+      row.addEventListener('pointerdown', onDown);
+      row.addEventListener('pointermove', onMove);
+      row.addEventListener('pointerup', onUp);
+      row.addEventListener('pointercancel', onUp);
+
+      const onResize = () => { half = 0; measure(); };
+      window.addEventListener('resize', onResize);
+      const settle = setTimeout(measure, 600);   /* after lazy images decode */
+
+      cleanups.push(() => {
+        clearTimeout(settle);
+        window.removeEventListener('resize', onResize);
+        row.removeEventListener('scroll', onScroll);
+        row.removeEventListener('pointerenter', onEnter);
+        row.removeEventListener('pointerleave', onLeave);
+        row.removeEventListener('focusin', onEnter);
+        row.removeEventListener('focusout', onLeave);
+        row.removeEventListener('pointerdown', onDown);
+        row.removeEventListener('pointermove', onMove);
+        row.removeEventListener('pointerup', onUp);
+        row.removeEventListener('pointercancel', onUp);
+      });
+    });
+
     /* --------------------------------------------------- COUNTDOWN (3-HOUR)
        The reference funnels run a 3-hour "OFFER ENDS IN HH : MM : SS" clock
        inside every CTA block, and it restarts on every page load. Ours keeps
@@ -308,14 +467,36 @@ export default function FunnelEffects() {
        A real deadline or intake cap in config overrides it. */
     const urgencyHosts = $$('[data-urgency]');
     if (urgencyHosts.length) {
-      const paint = (txt) => urgencyHosts.forEach((host) => {
+      /* Two paint modes against the SAME slot.
+         · segments — the clock. Writes only the digit nodes CtaBlock already
+           rendered, so nothing is destroyed and nothing reflows.
+         · sentence — the intake-cap variant. Replaces the segments outright,
+           so the host is flagged .cd-plain and the CSS stands the segment
+           geometry down. */
+      const paintClock = (h, m, s) => urgencyHosts.forEach((host) => {
         host.style.display = '';
+        const seg = { h, m, s };
+        const cells = $$('[data-cd]', host);
+        if (!cells.length) {                       // markup without segments
+          const t = $('.u-text', host);
+          if (t) t.textContent = `${h} Hrs : ${m} Min : ${s} Sec`;
+          return;
+        }
+        cells.forEach((cell) => {
+          const next = seg[cell.getAttribute('data-cd')];
+          if (next !== undefined && cell.textContent !== next) cell.textContent = next;
+        });
+      });
+
+      const paintSentence = (txt) => urgencyHosts.forEach((host) => {
+        host.style.display = '';
+        host.classList.add('cd-plain');
         const t = $('.u-text', host);
         if (t) t.textContent = txt;
       });
 
       if (CONFIG.MONTHLY_INTAKE_CAP) {
-        paint(`Only ${CONFIG.MONTHLY_INTAKE_CAP} new clients taken each month`);
+        paintSentence(`Only ${CONFIG.MONTHLY_INTAKE_CAP} new clients taken each month`);
       } else {
         const WINDOW_MS = 5 * 60 * 60 * 1000;
         let end;
@@ -331,11 +512,11 @@ export default function FunnelEffects() {
         const pad = (n) => String(n).padStart(2, '0');
         const tick = () => {
           const left = end - Date.now();
-          if (left <= 0) { paint('00 Hrs : 00 Min : 00 Sec'); return; }
+          if (left <= 0) { paintClock('00', '00', '00'); return; }
           const h = Math.floor(left / 36e5);
           const m = Math.floor((left % 36e5) / 6e4);
           const sec = Math.floor((left % 6e4) / 1000);
-          paint(`${pad(h)} Hrs : ${pad(m)} Min : ${pad(sec)} Sec`);
+          paintClock(pad(h), pad(m), pad(sec));
         };
         tick();
         const id = setInterval(tick, 1000);

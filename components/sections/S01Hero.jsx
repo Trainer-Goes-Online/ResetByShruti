@@ -58,6 +58,20 @@ export default function S01Hero() {
           <span className="af-stars"><Gap>rating · Q2.2</Gap></span>
         )}
       </div>
+
+      {/* Second line of the proof stack, as in the reference: the avatars and
+          rating establish WHO, this removes the risk of acting on it. Unlike
+          the numbers above it this claim is not gated on config — the
+          money-back guarantee is a fixed term of the offer, and section 08
+          states it in full.
+
+          i-shield, not a bespoke refund mark: the sticky bar (S09FaqFinale)
+          already pairs this exact shield with this exact sentence, so a second
+          symbol for the same claim would read as two different promises. */}
+      <p className="cred-guarantee">
+        <Ico id="shield" className="ico ico-sm" />
+        <span><b>100%</b> Money-Back Guarantee</span>
+      </p>
     </div>
 
     <div className="eyebrow-pill reveal" data-d="1">

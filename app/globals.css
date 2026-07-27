@@ -70,12 +70,20 @@
   --sticky-a: var(--dark-1);
   --sticky-b: var(--dark-2);
 
-  /* ── TYPE ── ARJ: Playfair Display 700 display, Inter body. ── */
+  /* ── TYPE ── three voices, loaded in app/layout.jsx via next/font.
+     display  Newsreader     — h1/h2/h3, display numbers
+     body     Inter          — everything that is read as prose
+     eyebrow  JetBrains Mono — uppercase wide-tracked labels, tags, step counts
+
+     The var(…, 'Family') fallback matters: if next/font's variable were ever
+     absent, a bare var() would invalidate the whole declaration and the
+     element would fall back to the UA serif rather than to the named face. */
   --f-display: var(--fh);
   --f-sans: var(--fb);
-  --f-mono: var(--fb);            /* ARJ has no mono voice */
-  --fh: 'Playfair Display', Georgia, serif;
-  --fb: 'Inter', 'Helvetica Neue', system-ui, sans-serif;
+  --f-mono: var(--fm);
+  --fh: var(--f-newsreader, 'Newsreader'), Georgia, 'Times New Roman', serif;
+  --fb: var(--f-inter, 'Inter'), 'Helvetica Neue', system-ui, sans-serif;
+  --fm: var(--f-jetbrains, 'JetBrains Mono'), ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* landing-premium.css .af-h1 — three breakpoints, their exact values. */
   --fs-h1:      clamp(37px, 3.57vw, 54px);
@@ -216,10 +224,13 @@ p em, li em, span em {
   font-weight: 500; color: var(--accent-deep);
 }
 
-/* ARJ's eyebrow is the BODY face at w700, uppercase, wide-tracked — not a
-   mono voice. Matching that exactly. */
+/* THE EYEBROW VOICE. ARJ had no mono face and ran these in the body sans; this
+   funnel does have one, so every uppercase wide-tracked label — section
+   eyebrows, tags, step counts, the countdown label — is JetBrains Mono. Section
+   overrides below restate colour/size/margin only, never the family, so this is
+   the single place the eyebrow face is decided. */
 .eyebrow {
-  font-family: var(--f-sans); font-size: var(--fs-eyebrow); font-weight: 700;
+  font-family: var(--f-mono); font-size: var(--fs-eyebrow); font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.16em; color: var(--accent-deep);
 }
 
@@ -656,48 +667,72 @@ body.locked { overflow: hidden; }
 /* ── COUNTDOWN (landing-premium.css .af-timer) ──────────────────────────────
    ARJ runs this RED, not in the brand hue — urgency should not read as brand
    furniture. This is the single deliberate exception to the one-hue rule. */
+/* SOLID PLATE, not the pale glowing lozenge this used to be. The reference is
+   a filled red tile: a stacked two-line "OFFER / ENDS IN" label on the left,
+   then the digits as three discrete segments — big number over a small caps
+   unit — separated by dimmed colons. Everything sits on the red, so the type
+   is white and the old outward glow is gone. */
 .countdown {
-  display: inline-flex; align-items: center; gap: 12px;
+  display: inline-flex; align-items: center; gap: 14px;
   margin: 16px auto 0; width: fit-content;
-  padding: 9px 18px; border-radius: 999px;
-  background: linear-gradient(180deg, #FFF5F5 0%, #FFE4E4 100%);
-  border: 1.5px solid rgba(185,28,28,.42);
+  padding: 8px 18px 9px; border-radius: 14px;
+  background: linear-gradient(180deg, var(--timer-val) 0%, var(--timer-ink) 100%);
+  border: 1px solid rgba(255,255,255,.20);
   box-shadow:
-    0 0 0 4px rgba(220,38,38,.07),
-    0 8px 18px rgba(185,28,28,.26),
-    inset 0 1px 0 rgba(255,255,255,.95),
-    inset 0 -2px 0 rgba(185,28,28,.14);
-  color: var(--timer-ink);
+    0 10px 22px rgba(150,20,20,.30),
+    inset 0 1px 0 rgba(255,255,255,.30),
+    inset 0 -2px 0 rgba(0,0,0,.16);
+  color: #fff;
 }
 
+/* Two lines, right-aligned against the digits — the <br> is in the markup. */
 .countdown .cd-label {
-  display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
-  font-family: var(--fb); font-size: 11px; font-weight: 800;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--timer-ink);
+  font-family: var(--fm); font-size: 9.5px; font-weight: 700;
+  line-height: 1.3; letter-spacing: .14em; text-transform: uppercase;
+  text-align: right; white-space: nowrap; color: rgba(255,255,255,.80);
 }
 
-.countdown .cd-label::before {
-  content: ""; flex: 0 0 7px; width: 7px; height: 7px; border-radius: 50%;
-  background: var(--timer-val);
+.countdown .cd-clock { display: inline-flex; align-items: flex-start; gap: 7px; }
+
+.countdown .cd-seg {
+  display: inline-flex; flex-direction: column; align-items: center;
+  min-width: 30px;
 }
 
-.countdown .cd-clock {
-  font-family: var(--fb); color: var(--timer-val);
-  font-variant-numeric: tabular-nums;
-  font-size: 14.5px; font-weight: 900; letter-spacing: .06em;
-  min-width: 76px; text-align: center;
-  text-shadow: 0 0 5px rgba(220,38,38,.55), 0 0 12px rgba(220,38,38,.35), 0 1px 0 rgba(255,255,255,.85);
-  animation: afTimerGlow 1.9s ease-in-out infinite;
+/* tabular-nums is load-bearing: without it the plate visibly breathes as the
+   seconds tick through digits of different width. */
+.countdown .cd-seg b {
+  font-family: var(--fm); font-size: 21px; font-weight: 700; line-height: 1;
+  font-variant-numeric: tabular-nums; letter-spacing: .01em; color: #fff;
 }
 
-@keyframes afTimerGlow {
-  0%,100% { text-shadow: 0 0 5px rgba(220,38,38,.50), 0 0 12px rgba(220,38,38,.30), 0 1px 0 rgba(255,255,255,.85); }
-  50%     { text-shadow: 0 0 8px rgba(220,38,38,.75), 0 0 20px rgba(220,38,38,.50), 0 1px 0 rgba(255,255,255,.85); }
+.countdown .cd-seg i {
+  margin-top: 5px; font-style: normal;
+  font-family: var(--fm); font-size: 8px; font-weight: 500;
+  letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.70);
 }
 
-@media (prefers-reduced-motion: reduce) { .countdown .cd-clock { animation: none; } }
+.countdown .cd-sep {
+  font-family: var(--fm); font-size: 18px; font-weight: 700; line-height: 1;
+  color: rgba(255,255,255,.45);
+}
 
-.stage-dark .countdown .cd-clock { color: var(--timer-val); }
+/* Intake-cap fallback: the effect replaces the segments with a sentence, so the
+   segment geometry has to stand down rather than squeeze it. */
+.countdown.cd-plain .cd-clock {
+  display: inline; font-family: var(--fb); font-size: 12px; font-weight: 700;
+  letter-spacing: .02em; color: #fff;
+}
+
+@media (max-width: 640px) {
+  .countdown { gap: 11px; padding: 7px 14px 8px; }
+  .countdown .cd-seg b { font-size: 18px; }
+  .countdown .cd-seg { min-width: 26px; }
+  .countdown .cd-label { font-size: 8.5px; letter-spacing: .12em; }
+}
+
+.stage-dark .countdown .cd-seg b,
+.stage-dark .countdown .cd-clock { color: #fff; }
 
 
 /* Trust triad — the references show each item with its own icon on one line
@@ -710,7 +745,13 @@ body.locked { overflow: hidden; }
 /* ---- Section masthead: mono eyebrow ABOVE every H2 ---------------------
    This is the most consistent hierarchy rule in both reference funnels —
    there is no bare H2 anywhere on either page. */
-.section-head .eyebrow { color: var(--accent-deep); font-weight: 500; letter-spacing: .16em; }
+/* Was w500/.16em while .proof, .foryou, .guar and the coach column each
+   restated w700/.18em locally — so the shared default was the odd one out and
+   the sections that DIDN'T override it (What's Included, the message wall) drew
+   a visibly lighter, tighter eyebrow than the rest of the page. Now that every
+   eyebrow is the same mono face that mismatch reads as a mistake rather than a
+   nuance, so the default is moved onto the majority spec and all six agree. */
+.section-head .eyebrow { color: var(--accent-deep); font-weight: 700; letter-spacing: .18em; }
 
 .stage-dark .section-head .eyebrow { color: var(--accent-light); }
 
@@ -762,7 +803,7 @@ body.locked { overflow: hidden; }
 .credband-inner {
   display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
   gap: 28px; padding: 11px 22px; white-space: normal;
-  font-family: var(--fb); font-weight: 900; font-size: 12.5px;
+  font-family: var(--fm); font-weight: 700; font-size: 12.5px;
   letter-spacing: .08em; text-transform: uppercase;
 }
 
@@ -862,6 +903,22 @@ body.locked { overflow: hidden; }
 
 .vslframe iframe, .vslframe video { position: absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); border: 0; z-index: 1; border-radius: 18px; }
 
+/* ── VSL → CTA gap ──────────────────────────────────────────────────────────
+   The hero's vertical rhythm is a fixed-pixel ladder: 22px under the h1, 20px
+   under the sub, 16px under the reach line, 26px under the chips, 16px under
+   the watch pill. The gap under the VSL was the one rung off it — the frame's
+   own 18px margin PLUS .ctablock's clamp(30px, 6vw, 48px) of top padding, so
+   it opened to 66px on a wide desktop and 48px on a phone. Visibly larger than
+   every other gap in the section, and a different size at each end.
+
+   Scoped to .hero so the other four CtaBlock placements keep the generous
+   section padding that separates them from their own sections. Fixed px, not a
+   vw clamp, is deliberate — that is what holds it identical to the rungs above
+   it at EVERY resolution rather than only at the two ends of the clamp. */
+.hero .vslframe { margin-bottom: 0; }
+.hero .ctablock { padding-top: 22px; }
+@media (max-width: 640px) { .hero .ctablock { padding-top: 18px; } }
+
 .vsl-ph {
   position: relative; z-index: 0; width: 100%; aspect-ratio: 16/9;
   border-radius: 18px; overflow: hidden;
@@ -954,7 +1011,9 @@ body.locked { overflow: hidden; }
   overflow: hidden;
 }
 
-.credband b { color: var(--brand); font-weight: 900; }
+/* 800, not 900 — JetBrains Mono ships up to 800, so 900 would be synthesised
+   into a smeared faux-bold that sits a hair heavier than the real 800 face. */
+.credband b { color: var(--brand); font-weight: 800; }
 
 .credband .sep {
   flex: 0 0 5px; width: 5px; height: 5px; border-radius: 50%;
@@ -963,10 +1022,47 @@ body.locked { overflow: hidden; }
 
 
 /* ── Hero social-proof row · .af-proofrow ── */
+/* Now a two-line proof stack (avatars + rating, then the guarantee), so the
+   axis is column. flex-wrap is dropped with it: wrapping only ever applied
+   within .credrow-text, which carries its own. */
 .credrow {
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-  gap: 14px; margin: 0 auto 20px; padding: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 9px; margin: 0 auto 20px; padding: 0;
   background: transparent; border: 0;
+}
+
+/* The risk-reversal line under the rating — the reference's "100% Guaranteed
+   Results" slot. Section 08 states the guarantee in full; this is the hero's
+   one-line version of it, sized to sit under the rating rather than compete
+   with it. */
+.cred-guarantee {
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+  font-size: 13px; font-weight: 600; color: var(--ink-soft);
+  line-height: 1.3; text-align: center;
+}
+.cred-guarantee svg { color: var(--brand); }
+.cred-guarantee b { color: var(--ink); font-weight: 800; }
+
+/* ── DESKTOP: one line, as in the reference ─────────────────────────────────
+   avatars + rating │ guarantee. The column above stays the MOBILE layout and
+   is deliberately untouched — hence min-width rather than re-declaring the
+   stack inside a max-width block.
+
+   The hairline is a ::before on the guarantee rather than the existing
+   .credrow .divider element: that one is markup, and it carries a
+   `display:none` below 900px, which would have killed the rule across most of
+   the range this needs to cover. As a pseudo-element it appears and disappears
+   with the row layout itself, so the two can never disagree.
+
+   flex-wrap is the safety net. The row measures ~470px of content, so it
+   clears 641px comfortably; if a longer rating string ever pushed past the
+   wrap point it drops to two lines instead of overflowing. */
+@media (min-width: 641px) {
+  .credrow { flex-direction: row; flex-wrap: wrap; gap: 14px; }
+  .cred-guarantee::before {
+    content: ""; flex: none; width: 1px; height: 15px;
+    background: var(--border-strong); margin-right: 6px;
+  }
 }
 
 .credrow .divider { flex: 0 0 1px; width: 1px; height: 14px; background: var(--border-strong); }
@@ -998,7 +1094,7 @@ body.locked { overflow: hidden; }
   display: inline-flex; align-items: center; gap: 10px;
   background: var(--brand); color: #fff;
   padding: 8px 18px; border-radius: 999px;
-  font-family: var(--fb); font-weight: 900; font-size: 11px;
+  font-family: var(--fm); font-weight: 700; font-size: 11px;
   letter-spacing: .11em; text-transform: uppercase;
   margin-bottom: 14px; line-height: 1.35; max-width: 100%;
 }
@@ -1038,7 +1134,7 @@ body.locked { overflow: hidden; }
    a solid filled pill (their green box → our brand), so the eye lands on the
    number, not on the whole line. */
 .hero h1.h1-soft {
-  font-weight: 400;
+  font-weight: 500;
   /* Smaller than ARJ's display size, matching the Food Freedom hero scale —
      same serif, just quieter. */
   font-size: clamp(26px, 2.9vw, 42px);
@@ -1046,12 +1142,64 @@ body.locked { overflow: hidden; }
   line-height: 1.26;
   color: var(--ink);
   text-wrap: balance;              /* reference wraps naturally, no orphans */
-  margin: 0 auto 22px;             /* air below the headline (ARJ-like) */
+  /* 16px, not the 22px this used to carry. The MARGIN was never the whole gap:
+     the h1 runs line-height 1.26 at ~42px, so its last line box already carries
+     ~11px of leading + descender band below the glyphs before the margin even
+     starts. Measured ink-to-ink that made this gap 33.3px against 27.8px for
+     sub→reach-para and 23.6px for reach-para→chips — the one rung standing off
+     the ladder, which is exactly what reads as "too much" on screen.
+     16px lands it at ~27.3px, level with the gap below it. */
+  margin: 0 auto 16px;
   max-width: 18ch;
 }
+
+/* ── DESKTOP: the three .h1-br breaks ARE the line structure ────────────────
+   The 18ch measure above is a MOBILE measure. Above the mobile breakpoint it
+   was still clamping the headline to roughly half the space it had, so
+   "Thyroid & Insulin Resistance" (28 characters) auto-wrapped and the headline
+   rendered on FOUR lines instead of the three the markup asks for. Releasing
+   the measure and turning auto-balancing off means the only break opportunities
+   left are the authored <br class="h1-br"> ones:
+
+       Lose [5-15 Kilos],
+       Even If You Have PCOS,
+       Thyroid & Insulin Resistance
+
+   The longest of those lines is ~590px at the 42px cap, so it clears the
+   1340px hero wrap at every desktop width — there is no resolution between
+   641px and ultrawide where a fourth line can reappear. */
+@media (min-width: 641px) {
+  .hero h1.h1-soft {
+    max-width: none;
+    text-wrap: wrap;               /* not `balance` — hard breaks decide */
+  }
+}
+/* ── OPTICALLY CENTRED CHIP ─────────────────────────────────────────────────
+   The box looked bottom-heavy because padding was being measured against the
+   FONT box, not the ink. Newsreader at this size reports (measured in-browser,
+   as a fraction of 1em):
+
+       ink ascent  .7184   ink descent  .0239   ← "5-15 Kilos" has no descenders
+       box ascent  .7423   box descent  .2634   ← but the box reserves room for them
+
+   So .2156em of the box below the baseline is permanently empty, and symmetric
+   padding lands the text .2156em too high — which the old .02em/.12em padding
+   then made worse by adding MORE at the bottom, for a ~13px visual imbalance.
+
+   The fix is a tightened line-height (collapses the dead descender band) plus
+   padding that leans top-heavy to compensate. Verified in-browser at the 42px
+   cap: 9.27px of clear space above the glyphs, 9.31px below — a 0.05px
+   imbalance, down from ~13px. Box height drops 58.5px → 49.6px, which is the
+   "reduce that space" half of the ask. Both paddings are in em, so the balance
+   holds at every clamp step and on mobile.
+
+   ⚠ If the chip copy ever gains a descender (a "y", "g", "p" — e.g. a range
+   written "5-15 Kgs"), ink descent changes and these two numbers must be
+   re-measured. Digits and "Kilos" have none, which is why this is stable. */
 .h1-soft .h1-chip {
   display: inline-block;
-  padding: .02em .34em .12em;
+  line-height: .86;
+  padding: .27em .34em .01em;
   border-radius: .16em;
   background: var(--brand);
   color: #fff;
@@ -1066,9 +1214,11 @@ body.locked { overflow: hidden; }
   gap: 12px; flex-wrap: wrap;
 }
 .cred-avatars { display: inline-flex; align-items: center; }
+/* 38px, up from 30px. The overlap moves with it (-9px → -11px) so the cluster
+   keeps the same proportion of each face visible rather than spreading out. */
 .cred-av {
-  width: 30px; height: 30px; border-radius: 50%; overflow: hidden;
-  border: 2px solid #fff; margin-left: -9px; background: var(--brand-soft);
+  width: 38px; height: 38px; border-radius: 50%; overflow: hidden;
+  border: 2px solid #fff; margin-left: -11px; background: var(--brand-soft);
   box-shadow: 0 1px 4px rgba(28,23,16,.18);
 }
 .cred-av:first-child { margin-left: 0; }
@@ -1092,7 +1242,8 @@ body.locked { overflow: hidden; }
   }
   .h1-br { display: none; }
   .hero .sub { margin-bottom: 16px; }
-  .cred-av { width: 26px; height: 26px; }
+  .cred-av { width: 32px; height: 32px; margin-left: -9px; }
+  .cred-guarantee { font-size: 11.5px; gap: 6px; }
 }
 
 .reach-para {
@@ -1645,7 +1796,7 @@ body.locked { overflow: hidden; }
 .proof .tag {
   position: absolute; bottom: 10px; z-index: 3;
   padding: 4px 12px; border-radius: 3px;
-  font-family: var(--fh); font-size: 10px; letter-spacing: .18em;
+  font-family: var(--fm); font-size: 10px; letter-spacing: .18em;
   text-transform: uppercase; color: #fff;
   transition: transform .35s var(--ease-btn), box-shadow .35s ease;
 }
@@ -1833,15 +1984,35 @@ body.locked { overflow: hidden; }
    padding:10px 0 14px (landing.css:1357 replaces the earlier 10px 0 40px),
    edge mask 4%/96%, user-select:none.
    -------------------------------------------------------------------------- */
+/* ── MANUALLY SLIDEABLE MARQUEE ─────────────────────────────────────────────
+   These rows used to be `overflow:hidden` with a CSS transform animation on the
+   track, which meant they could ONLY autoplay — there was no way for a visitor
+   to push them along on either mobile or desktop. They are now real horizontal
+   scroll containers: touch swipe and trackpad come free from the platform,
+   mouse click-drag and the autoplay itself are driven from FunnelEffects.
+
+   ⚠ scroll-behavior MUST be pinned to auto here. `html { scroll-behavior:
+   smooth }` inherits into these containers, and a smooth-scrolling container
+   animates every scrollLeft write — which would fight the per-frame autoplay
+   and leave the rows juddering or stalled. */
 .gal-row {
   position: relative;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: auto;
+  overscroll-behavior-x: contain;   /* a swipe past the end must not page-back */
+  touch-action: pan-x pan-y;
   padding: 10px 0 14px;
   mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   user-select: none;
   -webkit-user-select: none;
+  cursor: grab;
+  scrollbar-width: none;            /* the mask already signals "more this way" */
+  -ms-overflow-style: none;
 }
+.gal-row::-webkit-scrollbar { display: none; }
+.gal-row.is-dragging { cursor: grabbing; }
 
 /* ARJ .af-gal-carousel-row2 — margin-top:18px (14px ≤640). */
 .gal-row2 { margin-top: 18px; }
@@ -1852,62 +2023,44 @@ body.locked { overflow: hidden; }
    marquee jumps 9px each cycle. We move the seam gap onto the set itself as
    padding-right, which makes 50% land exactly on one set + one gap. Same
    visible spacing, seamless loop. */
+/* The track is now just the wide flex row the container scrolls over. The set
+   is still authored twice — that is what lets the autoplay wrap by half the
+   scroll width without a visible seam, exactly as the -50% translate did. */
 .gal-track {
   display: flex;
   width: max-content;
-  will-change: transform;
-  animation: wallScrollLtr 40s linear infinite;
-}
-
-.gal-row[data-dir="rtl"] .gal-track { animation-name: wallScrollRtl; }
-
-/* ARJ: durationSec = max(40, round(slides.length * 3.5)). 7 slides per row
-   → 40s, the floor. */
-@keyframes wallScrollLtr {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
-}
-
-@keyframes wallScrollRtl {
-  from { transform: translate3d(-50%, 0, 0); }
-  to   { transform: translate3d(0, 0, 0); }
 }
 
 /* ── §13b · CASE-FILE CAROUSEL ──────────────────────────────────────────────
    Same marquee mechanics as the message wall (set authored twice, -50% loop,
    pause on hover/focus, edge mask), sized for the tall testimonial cards. */
 .case-row {
-  position: relative; overflow: hidden; padding: 12px 0 6px; margin-top: 6px;
+  position: relative; padding: 12px 0 6px; margin-top: 6px;
+  overflow-x: auto; overflow-y: hidden;
+  scroll-behavior: auto; overscroll-behavior-x: contain; touch-action: pan-x pan-y;
   mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
   user-select: none; -webkit-user-select: none;
+  cursor: grab; scrollbar-width: none; -ms-overflow-style: none;
 }
-.case-track {
-  display: flex; width: max-content; will-change: transform;
-  animation: wallScrollLtr 60s linear infinite;
-}
-.case-row:hover .case-track,
-.case-row:focus-within .case-track { animation-play-state: paused; }
+.case-row::-webkit-scrollbar { display: none; }
+.case-row.is-dragging { cursor: grabbing; }
+.case-track { display: flex; width: max-content; }
 .case-set { display: flex; gap: 20px; flex-shrink: 0; padding-right: 20px; align-items: stretch; }
 .case-set .case-card { flex: 0 0 340px; width: 340px; margin: 0; align-self: stretch; }
 @media (max-width: 640px) {
   .case-set { gap: 14px; padding-right: 14px; }
   .case-set .case-card { flex-basis: 296px; width: 296px; }
-  .case-track { animation-duration: 46s; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .case-track { animation: none; }
-  .case-row { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 }
 
 /* ARJ .af-gal-set — display:flex, gap:18px, flex-shrink:0. */
 .gal-set { display: flex; gap: 18px; flex-shrink: 0; padding-right: 18px; }
 
-/* ARJ pauses on hover (`.af-gal-carousel:hover .af-gal-track`). :focus-within
-   is ours — without it a keyboard user tabbing into a slide would have the
-   focused control slide out from under them. */
-.gal-row:hover .gal-track,
-.gal-row:focus-within .gal-track { animation-play-state: paused; }
+/* Autoplay pausing on hover and on :focus-within is now decided in
+   FunnelEffects, because the movement is a scrollLeft loop rather than a CSS
+   animation there is no animation-play-state left to toggle. The focus case
+   still matters for the same reason it always did: a keyboard user tabbing
+   into a slide must not have it slide out from under them. */
 
 
 /* ----------------------------------------------------------------------------
@@ -2152,15 +2305,38 @@ body.locked { overflow: hidden; }
   position: absolute; top: 24px; left: 24px; z-index: 4;
   padding: 8px 14px; border-radius: 999px;
   background: var(--brand); color: #fff;
-  font-family: var(--fh); font-size: 11px;
-  letter-spacing: .15em; text-transform: uppercase;
+  /* Was the DISPLAY serif at .15em, which read a size apart from every other
+     eyebrow on the page. Pinned to the shared eyebrow spec — same face, same
+     --fs-eyebrow token, same .18em — so "Meet Your Coach" matches the eyebrow
+     above every other section head. */
+  font-family: var(--fm); font-size: var(--fs-eyebrow); font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase; line-height: 1.4;
 }
 
 /* ARJ .count — stat pair on a bottom scrim (landing.css:632 + premium:1187) */
+/* Was a full-bleed near-black scrim (rgba(20,16,11,.82)) fading up the photo —
+   an off-brand grey-black bar laid across a warm portrait, and the heaviest
+   thing in the section. It is now a floating frosted plate in the brand hue:
+   the credential pair sits ON an object instead of under a shadow, the blur
+   carries the legibility the opacity used to have to buy, and the colour is
+   derived from --brand so it re-skins with the rest of the funnel. */
 .coach-count {
-  position: absolute; bottom: 24px; left: 24px; right: 24px; z-index: 4;
-  display: flex; justify-content: space-between; gap: 12px;
-  background: linear-gradient(180deg, transparent, rgba(20,16,11,.82) 45%);
+  position: absolute; bottom: 18px; left: 18px; right: 18px; z-index: 4;
+  display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: 16px;
+  background: color-mix(in srgb, var(--brand-deep) 70%, transparent);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+          backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid color-mix(in srgb, #fff 26%, transparent);
+  box-shadow:
+    0 10px 26px color-mix(in srgb, var(--brand-deep) 34%, transparent),
+    inset 0 1px 0 rgba(255,255,255,.24);
+}
+
+/* backdrop-filter is what makes 70% opacity readable. Where it is unsupported
+   the plate has to carry the contrast on its own. */
+@supports not (backdrop-filter: blur(4px)) {
+  .coach-count { background: color-mix(in srgb, var(--brand-deep) 88%, transparent); }
 }
 .coach-count > div { min-width: 0; }
 /* ARJ's right-hand stat is "1,400+ / Clients" — short enough to sit flush.
@@ -2201,7 +2377,7 @@ body.locked { overflow: hidden; }
    column + element (0,2,1) restores it. Bit us here too — verified on screen. */
 .coach-text p.coach-eyebrow {
   display: block; text-align: left; margin: 0 0 10px;
-  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  font-family: var(--fm); font-size: var(--fs-eyebrow); font-weight: 700;
   letter-spacing: .18em; text-transform: uppercase;
   color: var(--brand); line-height: 1.4;
 }
@@ -2289,7 +2465,7 @@ body.locked { overflow: hidden; }
   .coach-text p.coach-eyebrow { font-size: 10px; letter-spacing: .14em; }
   .coach-text h2 { font-size: 22px; line-height: 1.22; }
   .coach-badge { top: 16px; left: 16px; padding: 7px 12px; font-size: 10px; }
-  .coach-count { bottom: 16px; left: 16px; right: 16px; }
+  .coach-count { bottom: 14px; left: 14px; right: 14px; padding: 10px 13px; border-radius: 14px; }
   .coach-count b { font-size: 17px; }
   .coach-count span { font-size: 9.5px; }
   .coach-pill { padding: 1px 10px 2px; }
@@ -2759,7 +2935,7 @@ body.locked { overflow: hidden; }
    12px (:1519) and 11px/.18em, dropping to 10px/.14em ≤640 (:1641). */
 .guar-eyebrow {
   text-align: center; margin: 0 auto 12px; max-width: 760px;
-  font-family: var(--fb); font-size: 11px; font-weight: 700;
+  font-family: var(--fm); font-size: 11px; font-weight: 700;
   letter-spacing: .18em; text-transform: uppercase; color: var(--brand);
 }
 
@@ -3060,7 +3236,7 @@ body.locked { overflow: hidden; }
   padding: 3px 9px; border-radius: 999px;
   background: color-mix(in srgb, var(--brand) 12%, #fff);
   border: 1px solid color-mix(in srgb, var(--brand) 26%, transparent);
-  font-family: var(--f-sans); font-size: 8.5px; font-weight: 800;
+  font-family: var(--f-mono); font-size: 8.5px; font-weight: 700;
   letter-spacing: .12em; text-transform: uppercase;
   color: var(--brand-deep); vertical-align: middle; white-space: nowrap;
 }
@@ -4771,7 +4947,7 @@ body.locked { overflow: hidden; }
 .legal-wrap { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 var(--wrap-pad); }
 
 .legal-kicker {
-  font-family: var(--fb); font-size: var(--fs-eyebrow); font-weight: 700;
+  font-family: var(--fm); font-size: var(--fs-eyebrow); font-weight: 700;
   letter-spacing: .16em; text-transform: uppercase; color: var(--brand);
   margin-bottom: 10px;
 }
