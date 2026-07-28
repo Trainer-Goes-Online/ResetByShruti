@@ -105,6 +105,17 @@ export default function RefundPolicyPage() {
         <li>The refund request is made after the 3-day refund request window.</li>
       </ul>
 
+      {/* Client-supplied clause. Carried in .legal-note (the same callout the
+          Terms page uses for the medical disclaimer) because a visitor who
+          skims the bullet list above must not miss it: pausing is common and
+          the consequence is total. */}
+      <div className="legal-note">
+        <p>
+          If any pauses are taken in plan (I have clients who pause plan for a week or so if they
+          are travelling, visiting home, etc.), <strong>no refund would be given.</strong>
+        </p>
+      </div>
+
       <h2>7. Our Commitment</h2>
       <p>Reset is built on honesty.</p>
       <p>
