@@ -265,6 +265,28 @@ export default function FunnelEffects() {
       }
     }
 
+    /* -------------------------------------- TESTIMONIAL VIDEO PREVIEWS
+       Play each muted testimonial clip only while it is on screen — iOS needs a
+       programmatic play() on a muted + inline element to paint a frame (a
+       seeked-frame poster stays blank there), and gating by viewport keeps all
+       four clips from decoding at once on a phone. */
+    const previewVids = $$('.tcard-vid video');
+    if (previewVids.length) {
+      const tryPlay = (v) => { const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); };
+      if ('IntersectionObserver' in window) {
+        const vio = new IntersectionObserver((entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) tryPlay(e.target);
+            else { try { e.target.pause(); } catch { /* ignore */ } }
+          });
+        }, { threshold: 0.25 });
+        previewVids.forEach((v) => vio.observe(v));
+        cleanups.push(() => vio.disconnect());
+      } else {
+        previewVids.forEach(tryPlay);
+      }
+    }
+
     /* ------------------------------------------ VSL · GA4 video_play (C16)
        The Vimeo player is rendered natively in the markup (it shows the
        thumbnail configured in Vimeo + its own play button). We attach the Vimeo

@@ -55,7 +55,11 @@ export default function S04Proof() {
             {/* display:block is load-bearing — a <span> inside a <button> is
                 inline and ignores aspect-ratio, collapsing the plate. */}
             <span className="tphoto">
-              <video src={`${src}#t=3`} preload="metadata" muted playsInline />
+              {/* Muted, inline, looping preview. iOS Safari does NOT paint a
+                  seeked-frame poster from preload=metadata (the clip showed
+                  blank on mobile), but it DOES render muted-inline video —
+                  FunnelEffects plays each only while it is on screen. */}
+              <video src={src} preload="metadata" muted loop playsInline />
               <span className="tglass" />
               <span className="tplay"><Ico id="play" /></span>
               <span className="tag ta">Video</span>
