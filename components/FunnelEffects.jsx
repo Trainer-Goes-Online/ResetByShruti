@@ -265,37 +265,33 @@ export default function FunnelEffects() {
       }
     }
 
-    /* ------------------------------------------ VSL · one-gesture play (C16)
-       The poster hands the play intent THROUGH: the first tap swaps in the
-       iframe with autoplay + inline already injected into the src. Two taps
-       (tap poster, then hunt the widget's own button) is where hook momentum
-       dies. The frame's aspect is reserved in CSS so it can't land at 0px. */
+    /* ------------------------------------------ VSL · GA4 video_play (C16)
+       The Vimeo player is rendered natively in the markup (it shows the
+       thumbnail configured in Vimeo + its own play button). We attach the Vimeo
+       Player SDK and fire GA4 `video_play` on the player's `play` event —
+       trackGa4Once dedupes to once per browser even if the visitor replays.
+       player.js loads afterInteractive, so we poll briefly until it's ready.
+       Fail-open: if the SDK never loads, the video still plays, we just lose the
+       GA4 signal. */
     const frame = $('#vslframe');
     if (frame && CONFIG.VSL_VIMEO_URL) {
-      const ph = $('.vsl-ph', frame);
-      if (ph) {
-        ph.style.cursor = 'pointer';
-        ph.setAttribute('role', 'button');
-        ph.setAttribute('tabindex', '0');
-        $('.ph-note', ph)?.remove();
+      const facade = $('.vsl-facade', frame);
+      if (facade) {
         const play = () => {
           const url = CONFIG.VSL_VIMEO_URL;
           const sep = url.includes('?') ? '&' : '?';
           const f = document.createElement('iframe');
-          f.src = `${url}${sep}autoplay=1&playsinline=1&title=0&byline=0&portrait=0`;
-          f.allow = 'autoplay; fullscreen; picture-in-picture';
+          f.src = `${url}${sep}autoplay=1&playsinline=1&badge=0&autopause=0&title=0&byline=0&portrait=0&dnt=1`;
+          f.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
           f.setAttribute('allowfullscreen', '');
-          f.title = 'Watch the Reset video';
+          f.referrerPolicy = 'strict-origin-when-cross-origin';
+          f.title = 'Reset by Shruti Solanki — watch the short video';
           frame.appendChild(f);
-          ph.style.display = 'none';
-          /* Hero VSL only (this handler is bound to #vslframe alone), so the
-             once-per-browser video_play is scoped correctly. */
-          trackGa4Once('video_play');
+          facade.remove();               // reveal the player (Vimeo controls now show)
+          trackGa4Once('video_play');    // once per browser, on OUR play button
         };
-        ph.addEventListener('click', play);
-        ph.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); play(); }
-        });
+        /* <button> so Enter/Space work natively; just wire the click. */
+        facade.addEventListener('click', play);
       }
     }
 

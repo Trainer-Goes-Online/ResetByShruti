@@ -103,6 +103,7 @@ export default function RefundPolicyPage() {
         <li>The programme was discontinued before completion.</li>
         <li>Required information requested by the coaching team was not provided.</li>
         <li>The refund request is made after the 3-day refund request window.</li>
+        <li>You voluntarily pause, suspend or interrupt your coaching programme for any reason, including travel, work commitments, holidays or personal circumstances. Any pause in the programme makes the Results Guarantee void.</li>
       </ul>
 
       {/* Client-supplied clause. Carried in .legal-note (the same callout the

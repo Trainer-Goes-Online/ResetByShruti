@@ -37,7 +37,7 @@ export default function S09FaqFinale() {
   <div className="wrap">
     <p className="eyebrow center faq-eyebrow reveal">Straight answers. No sales spin.</p>
     <h2 className="faq-h2 reveal">
-      Before You Book, <span>Quick Answers</span>
+      Common Questions From <span>Working Women</span>
     </h2>
 
     <div className="faq">

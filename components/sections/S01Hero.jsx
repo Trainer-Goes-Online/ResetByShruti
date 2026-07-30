@@ -5,15 +5,18 @@
    Reference: teamfitarjun.com — see SESSION-HANDOFF.md for the exact ARJ
    classes this section must match.
    ========================================================================== */
-import Link from 'next/link';
-import Image from 'next/image';
 import { Ico } from '@/components/Icons';
 import CtaBlock from '@/components/CtaBlock';
-import Price, { Gap } from '@/components/Price';
-import { CONFIG, CTA_SHORT } from '@/lib/config';
+import { Gap } from '@/components/Price';
+import { CONFIG } from '@/lib/config';
 import { CONDITIONS } from '@/lib/content';
+import { getVimeoPoster } from '@/lib/vimeo';
 
-export default function S01Hero() {
+export default async function S01Hero() {
+  /* Resolve the Vimeo thumbnail server-side so the facade shows the video's own
+     poster with no Vimeo chrome until the visitor clicks our play button. */
+  const vslPoster = CONFIG.VSL_VIMEO_URL ? await getVimeoPoster(CONFIG.VSL_VIMEO_URL) : null;
+
   return (
     <>
 {/* ═══════════ HERO ═══════════
@@ -119,15 +122,30 @@ export default function S01Hero() {
       </button>
     </div>
 
-    {/* VSL · aspect reserved so the embed can never land at 0px (C16).
-        DECLARED PLACEHOLDER — NEXT_PUBLIC_VSL_VIMEO_URL makes it live. */}
+    {/* VSL · aspect reserved so the embed can never land at 0px (C16). When the
+        Vimeo URL is set the native player renders directly — it shows the
+        thumbnail configured IN Vimeo and its own play button. FunnelEffects
+        attaches the Vimeo Player SDK to fire GA4 `video_play` on play (once per
+        browser). Fail-open: the video still plays if that JS never runs. */}
     <div className="vslframe reveal" data-d="4" id="vslframe">
-      <div className="vsl-ph">
-        <span className="playdisc"><Ico id="play" /></span>
-        {!CONFIG.VSL_VIMEO_URL && (
+      {CONFIG.VSL_VIMEO_URL ? (
+        /* Click-to-load facade: the video's Vimeo thumbnail + our branded play
+           button, no Vimeo UI. FunnelEffects swaps in the real player (with
+           controls, autoplay) on click and fires GA4 video_play once/browser. */
+        <button
+          type="button"
+          className={`vsl-facade${vslPoster ? ' has-poster' : ''}`}
+          aria-label="Play the video"
+          style={vslPoster ? { backgroundImage: `url("${vslPoster}")` } : undefined}
+        >
+          <span className="playdisc"><Ico id="play" /></span>
+        </button>
+      ) : (
+        <div className="vsl-ph">
+          <span className="playdisc"><Ico id="play" /></span>
           <span className="eyebrow ph-note">Placeholder: VSL not yet recorded (Q6.1)</span>
-        )}
-      </div>
+        </div>
+      )}
     </div>
 
     <CtaBlock micro />

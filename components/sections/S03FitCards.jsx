@@ -27,7 +27,7 @@ export default function S03FitCards() {
 <section className="section foryou">
   <div className="wrap">
     <div className="section-head">
-      <span className="eyebrow reveal">For working women with PCOS, thyroid &amp; insulin resistance</span>
+      <span className="eyebrow reveal">For working women across India & Abroad</span>
       <h2 className="reveal" data-d="1">This Is For You <em className="u-word">If</em></h2>
     </div>
 

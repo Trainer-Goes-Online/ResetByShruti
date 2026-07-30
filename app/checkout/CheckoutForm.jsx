@@ -246,7 +246,7 @@ export default function CheckoutForm() {
       amount: order.amount,
       currency: order.currency,
       name: 'Reset by Shruti Solanki',
-      description: `${CONFIG.CALL_MINUTES}-minute 1:1 diagnosis call with Shruti`,
+      description: `${CONFIG.CALL_MINUTES}-minute 1-on-1 Root Cause Clarity Call with Shruti Solanki`,
       order_id: order.orderId,
       prefill: {
         name: `${customer.firstName} ${customer.lastName}`.trim(),
@@ -446,7 +446,7 @@ export default function CheckoutForm() {
             <div className="co-prod">
               <div className="co-prod-info">
                 <div className="co-prod-title">
-                  <h3>1:1 Diagnostic Call with Shruti</h3>
+                  <h3>1-on-1 Root Cause Clarity Call with Shruti Solanki</h3>
                   <span className="co-prod-price"><Price /></span>
                 </div>
                 <button
