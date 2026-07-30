@@ -317,162 +317,44 @@ export default function FunnelEffects() {
       }
     }
 
-    /* ------------------------------------------------ SLIDEABLE MARQUEES
+    /* --------------------------------------------------- CONTINUOUS MARQUEES
        Every [data-marquee] row — the two message-wall rows and the case-file
-       row — is a native horizontal scroll container whose set is authored
-       twice. Autoplay is a scrollLeft loop rather than a CSS transform, which
-       is what makes the row draggable: the visitor and the loop are now moving
-       the SAME property, so a swipe or a click-drag simply takes over instead
-       of fighting a transform that owns the element.
+       row — drifts via a compositor-only CSS translate (see .gal-track /
+       .case-track in globals.css). That is what makes it butter-smooth: the
+       animation runs off the main thread and never rounds to whole pixels the
+       way a scrollLeft loop does. Pause-on-interaction is CSS too (hover +
+       focus-within).
 
-       The wrap is by half the scroll width — one full set — so the seam is
-       invisible in both directions and the row can be pushed past either end
-       without ever running out of content.
-
-       Fails open: if this never runs the rows are static but still swipeable
-       and trackpad-scrollable, because that part is pure CSS. */
+       This block does only two things, both progressive enhancements:
+         1. copy the row's data-marquee (seconds per set) into --marq-dur;
+         2. on touch, toggle .is-held on the track so a finger dragged across a
+            chat on a phone pauses that row and lifting the finger resumes it
+            (phones have no :hover, so CSS alone can't cover them).
+       Fails open: without JS the rows still drift at the 40s/60s fallbacks and
+       still pause on hover. */
     $$('[data-marquee]').forEach((row) => {
       const track = row.firstElementChild;
       if (!track) return;
 
-      const durSec = Number(row.getAttribute('data-marquee')) || 40;
-      const back = row.getAttribute('data-dir') === 'rtl';
-      let half = 0;
-      let pos = 0;
-      let hovering = false;
-      let dragging = false;
-      let holdUntil = 0;          /* grace period after a manual interaction */
-      let raf = 0;
+      const durSec = Number(row.getAttribute('data-marquee'));
+      if (durSec > 0) track.style.setProperty('--marq-dur', durSec + 's');
 
-      /* scrollWidth halves because the set is rendered twice. Re-measured on
-         resize AND after images decode — a row measured before its lazy images
-         have intrinsic size would wrap at the wrong offset. */
-      const measure = () => {
-        const next = row.scrollWidth / 2;
-        if (next > 0 && Math.abs(next - half) > 1) {
-          half = next;
-          pos = back ? half : 0;
-          row.scrollLeft = pos;
-        }
-      };
-      measure();
-
-      const manual = () => hovering || performance.now() < holdUntil || reduced;
-
-      /* pos is tracked as a float and written to scrollLeft each frame. Adding
-         a sub-pixel delta straight onto scrollLeft would be rounded away at
-         these speeds and the row would never move at all. */
-      let last = 0;
-      const step = (ts) => {
-        raf = requestAnimationFrame(step);
-        const dt = last ? Math.min(ts - last, 64) : 0;
-        last = ts;
-        if (document.hidden || half <= 0) return;
-
-        /* Anything that moved the row other than this loop — a swipe, touch
-           momentum, a trackpad, an end-clamp — wins. Resyncing here rather
-           than yanking the row back to a stale pos is what lets autoplay
-           resume from wherever the visitor let go. */
-        if (Math.abs(row.scrollLeft - pos) > 2) pos = row.scrollLeft;
-
-        if (dragging || manual()) return;
-
-        pos += (back ? -1 : 1) * (half / durSec) * (dt / 1000);
-        if (pos >= half) pos -= half;
-        else if (pos < 0) pos += half;
-        row.scrollLeft = pos;
-      };
-      raf = requestAnimationFrame(step);
-      cleanups.push(() => cancelAnimationFrame(raf));
-
-      /* Native touch/trackpad scrolling moves scrollLeft with no pointer event
-         we drive, and a scroll container CLAMPS at both ends — so without this
-         a hard swipe parks the visitor against a dead edge. Re-entering by one
-         set is invisible because the second set is a copy of the first.
-
-         Two things keep this from ping-ponging at the seam. It only runs while
-         the row is under manual control (autoplay does its own wrapping on pos,
-         and its post-wrap position would otherwise trip the low branch every
-         cycle), and the thresholds are offset by a pixel so a row sitting
-         exactly on the boundary satisfies neither branch. */
-      const onScroll = () => {
-        if (half <= 0 || dragging || !manual()) return;
-        if (row.scrollLeft >= half + 1) row.scrollLeft -= half;
-        else if (row.scrollLeft < 1) row.scrollLeft += half;
-      };
-      row.addEventListener('scroll', onScroll, { passive: true });
-
-      const hold = () => { holdUntil = performance.now() + 1400; };
-
-      const onEnter = () => { hovering = true; };
-      const onLeave = () => { hovering = false; };
-      row.addEventListener('pointerenter', onEnter);
-      row.addEventListener('pointerleave', onLeave);
-      row.addEventListener('focusin', onEnter);
-      row.addEventListener('focusout', onLeave);
-
-      /* Mouse click-drag. Touch is deliberately left to the platform — its
-         native momentum scrolling is better than anything reimplemented here,
-         and preventDefault on a touch pointerdown would kill it. */
-      let startX = 0;
-      let startScroll = 0;
-      let moved = 0;
-
-      const onDown = (e) => {
-        if (e.pointerType !== 'mouse' || e.button !== 0) { hold(); return; }
-        dragging = true; moved = 0;
-        startX = e.clientX;
-        startScroll = row.scrollLeft;
-        row.classList.add('is-dragging');
-        try { row.setPointerCapture(e.pointerId); } catch {}
-        e.preventDefault();
-      };
-
-      const onMove = (e) => {
-        if (!dragging) return;
-        const dx = e.clientX - startX;
-        moved = Math.max(moved, Math.abs(dx));
-        row.scrollLeft = startScroll - dx;
-        pos = row.scrollLeft;
-      };
-
-      const onUp = (e) => {
-        if (!dragging) return;
-        dragging = false;
-        row.classList.remove('is-dragging');
-        try { row.releasePointerCapture(e.pointerId); } catch {}
-        hold();
-        /* A drag that crossed the slop threshold must not also fire the click
-           that would open the lightbox under the cursor. Swallowed once, in
-           the capture phase, before the delegated [data-img] handler sees it. */
-        if (moved > 6) {
-          const swallow = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
-          row.addEventListener('click', swallow, { capture: true, once: true });
-          setTimeout(() => row.removeEventListener('click', swallow, true), 350);
-        }
-      };
-
-      row.addEventListener('pointerdown', onDown);
-      row.addEventListener('pointermove', onMove);
-      row.addEventListener('pointerup', onUp);
-      row.addEventListener('pointercancel', onUp);
-
-      const onResize = () => { half = 0; measure(); };
-      window.addEventListener('resize', onResize);
-      const settle = setTimeout(measure, 600);   /* after lazy images decode */
+      /* Touch-only hold. Pointer events with pointerType 'touch' fire on the
+         same gesture that scrolls the page vertically, so we only pause — never
+         preventDefault — and release on up/cancel/leave. A tap still reaches
+         the delegated [data-img] handler and opens the lightbox. */
+      const hold = (e) => { if (e.pointerType === 'touch') track.classList.add('is-held'); };
+      const release = () => track.classList.remove('is-held');
+      row.addEventListener('pointerdown', hold, { passive: true });
+      row.addEventListener('pointerup', release, { passive: true });
+      row.addEventListener('pointercancel', release, { passive: true });
+      row.addEventListener('pointerleave', release, { passive: true });
 
       cleanups.push(() => {
-        clearTimeout(settle);
-        window.removeEventListener('resize', onResize);
-        row.removeEventListener('scroll', onScroll);
-        row.removeEventListener('pointerenter', onEnter);
-        row.removeEventListener('pointerleave', onLeave);
-        row.removeEventListener('focusin', onEnter);
-        row.removeEventListener('focusout', onLeave);
-        row.removeEventListener('pointerdown', onDown);
-        row.removeEventListener('pointermove', onMove);
-        row.removeEventListener('pointerup', onUp);
-        row.removeEventListener('pointercancel', onUp);
+        row.removeEventListener('pointerdown', hold);
+        row.removeEventListener('pointerup', release);
+        row.removeEventListener('pointercancel', release);
+        row.removeEventListener('pointerleave', release);
       });
     });
 

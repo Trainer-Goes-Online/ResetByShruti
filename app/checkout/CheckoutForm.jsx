@@ -150,7 +150,9 @@ export default function CheckoutForm() {
   const [country, setCountry] = useState(COUNTRIES[0]);
   const [flagOpen, setFlagOpen] = useState(false);
   const [flagSearch, setFlagSearch] = useState('');
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  /* Open by default so mobile visitors see what's included without a tap.
+     Desktop forces it open and hides the toggle regardless (globals.css:4957). */
+  const [detailsOpen, setDetailsOpen] = useState(true);
   const [loading, setLoading] = useState(false);
   const flagBoxRef = useRef(null);
 
