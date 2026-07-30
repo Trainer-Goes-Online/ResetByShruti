@@ -272,7 +272,21 @@ export default function FunnelEffects() {
        four clips from decoding at once on a phone. */
     const previewVids = $$('.tcard-vid video');
     if (previewVids.length) {
-      const tryPlay = (v) => { const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); };
+      /* React does NOT reliably set the `muted` DOM PROPERTY from the JSX
+         `muted` attribute — only the attribute — so iOS Safari sees the clip
+         as unmuted and blocks inline autoplay, leaving the plate blank on
+         phones (desktop is lenient, which is why it only shows there). Forcing
+         the property (plus the inline-playback attributes) is what makes the
+         looping preview appear on mobile too. */
+      const prime = (v) => {
+        v.muted = true;
+        v.defaultMuted = true;
+        v.setAttribute('muted', '');
+        v.setAttribute('playsinline', '');
+        v.setAttribute('webkit-playsinline', '');
+      };
+      const tryPlay = (v) => { prime(v); const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); };
+      previewVids.forEach(prime);
       if ('IntersectionObserver' in window) {
         const vio = new IntersectionObserver((entries) => {
           entries.forEach((e) => {

@@ -59,7 +59,7 @@ export default function S04Proof() {
                   seeked-frame poster from preload=metadata (the clip showed
                   blank on mobile), but it DOES render muted-inline video —
                   FunnelEffects plays each only while it is on screen. */}
-              <video src={src} preload="metadata" muted loop playsInline />
+              <video src={src} preload="metadata" muted loop autoPlay playsInline />
               <span className="tglass" />
               <span className="tplay"><Ico id="play" /></span>
               <span className="tag ta">Video</span>
