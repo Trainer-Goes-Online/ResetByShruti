@@ -1785,7 +1785,13 @@ body.locked { overflow: hidden; }
    keeps ARJ's furniture: the corner tag and the same overlay grammar.
    -------------------------------------------------------------------------- */
 .proof .tphoto {
-  display: block; position: relative; aspect-ratio: 9 / 14; overflow: hidden;
+  display: block; position: relative; overflow: hidden;
+  width: 100%; flex: 0 0 auto;
+  /* 9:14 ratio via PADDING (14/9 = 155.56%), not aspect-ratio: on iOS Safari,
+     aspect-ratio on a flex-column item whose <video> has no loaded size
+     collapses to 0 height (name-only cards on iPhone). The padded box holds
+     its height on every engine; the video fills it via position:absolute. */
+  height: 0; padding-top: 155.56%;
   background: linear-gradient(135deg, var(--bg-alt), var(--bg-grid));
 }
 
