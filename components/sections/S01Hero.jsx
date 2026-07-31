@@ -19,6 +19,17 @@ export default async function S01Hero() {
 
   return (
     <>
+{/* The VSL poster is the LCP element, and it arrives as a CSS
+    background-image, which the preload scanner cannot see: it is only
+    discovered once the stylesheet has parsed and the rule matches. Lighthouse
+    measured 390ms of pure "resource load delay" from exactly that.
+
+    React 19 hoists this <link> into <head>, so the request starts with the
+    document instead of after CSS, and fetchPriority lifts it above the
+    background images the browser would otherwise guess are unimportant. */}
+{vslPoster && (
+  <link rel="preload" as="image" href={vslPoster} fetchPriority="high" />
+)}
 {/* ═══════════ HERO ═══════════
     ARJ's element order, verbatim, with their stagger delays:
     proofrow → callout (.06s) → h1 (.12s) → sub-strong (.16s) →
@@ -44,11 +55,12 @@ export default async function S01Hero() {
           <span className="cred-av">
             <img src="/img/Icons/Women_Icon4.jpeg" alt="" loading="lazy" />
           </span>
-          {CONFIG.VIDEO_2 && (
-            <span className="cred-av">
-              <video src={`${CONFIG.VIDEO_2}#t=1.5`} muted playsInline preload="metadata" />
-            </span>
-          )}
+          {/* The fifth avatar used to be a <video> poster-framed off VIDEO_2.
+              preload=metadata is a hint, not a contract: the mobile trace shows
+              that clip pulling 17 MB to fill a 38px circle, above the fold, in
+              the critical path. No 38px decoration justifies that, so the slot
+              is dropped rather than made lazy. To restore a fifth face, add a
+              still to /img/Icons and render it as an <img> like the four above. */}
         </span>
         {CONFIG.RATING ? (
           <span className="af-stars">

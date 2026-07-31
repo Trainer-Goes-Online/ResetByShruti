@@ -21,16 +21,33 @@ import { CONFIG } from '@/lib/config';
    generated stylesheet and the :root block in a same-specificity race for the
    same custom property — it only ever looked correct because both sides
    happened to name Playfair. Separate names remove the race entirely. */
+/* ⚠ WEIGHTS ARE DELIBERATELY NARROW. Declaring 5 weights per family plus
+   Newsreader italic shipped 46 woff2 files totalling 1.17 MB, and every face
+   next/font declares is also preloaded. On mobile that is what pushed LCP out:
+   the h1 painted in the fallback face at FCP and then repainted when Newsreader
+   finally swapped in, which Lighthouse recorded as ~3s of LCP render delay
+   against an element with 0ms of load time.
+
+   Each list below is the set the stylesheet actually uses. Weights that are not
+   listed (Inter 900 on .reach-para b, Newsreader 800) synthesise from the
+   nearest real face, which is what was already happening for Inter 900. */
+/* ⚠ preload stays ON for all three. Setting preload:false on Inter and
+   JetBrains was tried and measurably regressed the page: score 84 → 73, LCP
+   3.5s → 4.3s, and CLS 0 → 0.087, because the unpreloaded faces then arrived
+   after first paint and reflowed the text under it. Preloading fewer fonts is
+   not the lever here; shipping fewer FACES is, which is what the narrowed
+   weight lists below do. */
 const newsreader = Newsreader({
-  subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
-  style: ['normal', 'italic'], variable: '--f-newsreader', display: 'swap',
+  subsets: ['latin'], weight: ['500', '600', '700'],
+  style: ['normal', 'italic'],           // h1/h2/h3 em is italic, globals.css:241
+  variable: '--f-newsreader', display: 'swap',
 });
 const inter = Inter({
-  subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
+  subsets: ['latin'], weight: ['400', '600', '700'],
   variable: '--f-inter', display: 'swap',
 });
 const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'], weight: ['400', '500', '600', '700', '800'],
+  subsets: ['latin'], weight: ['500', '700'],
   variable: '--f-jetbrains', display: 'swap',
 });
 
@@ -99,6 +116,17 @@ export default function RootLayout({ children }) {
      whole funnel to the green accent — one attribute, no stylesheet edit. */
   return (
     <html lang="en" className={`${newsreader.variable} ${inter.variable} ${jetbrainsMono.variable}`}>
+      <head>
+        {/* Lighthouse reported zero preconnected origins. Every one of these is
+            hit during the first screen, and each cold connection costs a DNS +
+            TCP + TLS round trip on mobile. Held to four, which is the point
+            past which preconnect starts competing with the requests it is meant
+            to accelerate. i.vimeocdn is first because it serves the LCP image. */}
+        <link rel="preconnect" href="https://i.vimeocdn.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://tgox-production-bucket.nyc3.cdn.digitaloceanspaces.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://connect.facebook.net" />
+      </head>
       <body>
         {/* ── Analytics + Pixel (afterInteractive so they never block paint) ──
             GA4 + Clarity carry no monetary values and are independent of Meta.
@@ -106,16 +134,29 @@ export default function RootLayout({ children }) {
             no content params) — its job here is to set the `_fbp` cookie that
             the server-side ic_event / sales events need to reach 9.3 EMQ. All
             purchase-quality signal is sent server-side via CAPI, never here. */}
+        {/* ── SCRIPT PRIORITY ──────────────────────────────────────────────
+            GA4 (163 KB) and Clarity (25 KB) were both afterInteractive, i.e.
+            competing with hydration for the main thread and contributing to a
+            650ms TBT. Neither needs to run before the page is interactive:
+            GA4 buffers its pageview and Clarity only records sessions. Both
+            move to lazyOnload.
+
+            The Meta Pixel deliberately stays afterInteractive. It is not
+            analytics here: its one job is to set the _fbp cookie that the
+            server-side ic_event and sales CAPI calls need to reach high EMQ,
+            and a visitor who converts fast could otherwise leave before a
+            lazily-loaded pixel ever ran, costing attribution on the events
+            that actually carry revenue. */}
         {CONFIG.GA4_ID && (
           <>
-            <Script src={`https://www.googletagmanager.com/gtag/js?id=${CONFIG.GA4_ID}`} strategy="afterInteractive" />
-            <Script id="ga4-init" strategy="afterInteractive">
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${CONFIG.GA4_ID}`} strategy="lazyOnload" />
+            <Script id="ga4-init" strategy="lazyOnload">
               {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${CONFIG.GA4_ID}');`}
             </Script>
           </>
         )}
         {CONFIG.CLARITY_ID && (
-          <Script id="clarity-init" strategy="afterInteractive">
+          <Script id="clarity-init" strategy="lazyOnload">
             {`(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","${CONFIG.CLARITY_ID}");`}
           </Script>
         )}

@@ -60,7 +60,7 @@ export default function S08Guarantee() {
           </span>
           <span>
             <strong>Your starting BMI is above 25.</strong> If you’re already close to a healthy
-            weight for your height, losing 5-10 kilos may not be physiologically appropriate. In
+            weight for your height, losing 4-10 kilos may not be physiologically appropriate. In
             that case, we’ll agree on a personalised transformation goal with you during your
             consultation before you enrol.
           </span>

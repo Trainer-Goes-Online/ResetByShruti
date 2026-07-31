@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { CONFIG } from '@/lib/config';
 import { captureParams, trackGa4Once, fireMetaAtcOnce } from '@/lib/track';
 
@@ -19,6 +20,38 @@ import { captureParams, trackGa4Once, fireMetaAtcOnce } from '@/lib/track';
      · the overlay is moved to document.body, never given a bigger z-index
    ========================================================================== */
 export default function FunnelEffects() {
+  /* ⚠ THE ROUTE KEY IS LOAD-BEARING, do not drop it back to [].
+     This component is mounted in the ROOT LAYOUT, so it survives every
+     client-side navigation. With an empty dependency array the effect ran once,
+     on first load, and never again. Going landing → /checkout → back then left
+     the page blank: `.armed` (which is what applies opacity:0) was still on
+     <body> from the first run, but the landing page had been unmounted and
+     remounted, so its .reveal elements were brand new and carried no `.in`
+     class, and the IntersectionObserver was still watching the discarded nodes.
+     Re-keying on pathname re-arms and re-observes the DOM that is actually on
+     screen after every navigation. */
+  const pathname = usePathname();
+
+  /* ---------------------------------------------- LAND AT THE TOP, ALWAYS
+     Browsers restore the previous scroll offset on a back navigation, so
+     returning from /checkout dropped the visitor beside whichever CTA they had
+     clicked, mid-page and with no context. Every arrival on a route starts at
+     the hero instead.
+
+     ⚠ DECLARED BEFORE the main effect on purpose. React runs effects in
+     declaration order, and the reveal pass below measures
+     getBoundingClientRect().top to decide what is already on screen. If the
+     scroll were still at the restored offset when it measured, it would mark
+     the wrong elements visible and the hero would arrive blank.
+
+     A hash link (#vslframe) is honoured rather than overridden. */
+  useEffect(() => {
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    if (!window.location.hash) window.scrollTo(0, 0);
+  }, [pathname]);
+
   useEffect(() => {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const $ = (s, r = document) => r.querySelector(s);
@@ -285,7 +318,17 @@ export default function FunnelEffects() {
         v.setAttribute('playsinline', '');
         v.setAttribute('webkit-playsinline', '');
       };
-      const tryPlay = (v) => { prime(v); const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); };
+      /* The clip has no src until it is first needed (see S04Proof). Promoting
+         data-src → src here is what keeps the initial page weight off the
+         network; after the first promotion the element keeps its src so
+         scrolling back and forth replays from cache rather than refetching. */
+      const attach = (v) => {
+        if (!v.getAttribute('src') && v.dataset.src) {
+          v.setAttribute('src', v.dataset.src);
+          v.load();
+        }
+      };
+      const tryPlay = (v) => { prime(v); attach(v); const p = v.play && v.play(); if (p && p.catch) p.catch(() => {}); };
       previewVids.forEach(prime);
       if ('IntersectionObserver' in window) {
         const vio = new IntersectionObserver((entries) => {
@@ -451,7 +494,7 @@ export default function FunnelEffects() {
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [pathname]);
 
   return null;
 }
