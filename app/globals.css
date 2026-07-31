@@ -144,10 +144,30 @@
 
 
 /* Marker-pen highlight — landing-premium.css .af-hl */
-h1 .hl, h2 .hl, .hl {
+/* ── EMPHASIS UNDERLINE ─────────────────────────────────────────────────────
+   This was a marker-pen highlight: a solid brand band filling the bottom 38%
+   of the text box. At body sizes it cut straight through the descenders and
+   read as a smear rather than an emphasis, which is what the client flagged.
+
+   Replaced with a real underline. text-decoration (rather than a gradient or a
+   positioned ::after) is what makes it feel considered:
+     · skip-ink automatically breaks the rule around descenders, so the g, y
+       and p in a phrase are never struck through
+     · it follows wrapped lines natively, one rule per line, correctly sized
+     · the offset keeps it clear of the baseline instead of touching it
+
+   One definition for all three emphasis classes, so heading highlights, the
+   hero reach line and the coach paragraph now share one treatment. */
+h1 .hl, h2 .hl, .hl,
+.reach-para .u,
+.coach-hl {
   color: var(--brand-deep); font-weight: 700; font-style: normal;
-  background: linear-gradient(180deg, transparent 62%, color-mix(in srgb, var(--brand) 34%, transparent) 62%);
-  padding: 0 2px;
+  background: none; padding: 0;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--brand) 42%, transparent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+  text-decoration-skip-ink: auto;
 }
 
 
@@ -1282,11 +1302,9 @@ body.locked { overflow: hidden; }
 .reach-para b { color: var(--brand); font-weight: 900; }
 
 /* .af-hl — soft rule under a phrase */
-.reach-para .u {
-  color: var(--brand-deep); font-weight: 700;
-  background: linear-gradient(180deg, transparent 62%, color-mix(in srgb, var(--brand) 34%, transparent) 62%);
-  padding: 0 2px;
-}
+/* Treatment is shared, see the emphasis-underline block near the top of this
+   file. Only the weight is restated here. */
+.reach-para .u { font-weight: 700; }
 
 /* .af-hl-pill */
 .reach-para .pill {
@@ -2500,11 +2518,9 @@ body.locked { overflow: hidden; }
 .coach-text p + p { margin-top: 1.05em; }
 
 /* ARJ .af-hl — soft rule under a phrase (landing-premium.css:739) */
-.coach-hl {
-  color: var(--brand-deep); font-weight: 700; padding: 0 2px;
-  background: linear-gradient(180deg,
-    transparent 62%, color-mix(in srgb, var(--brand) 34%, transparent) 62%);
-}
+/* Treatment is shared, see the emphasis-underline block near the top of this
+   file. Only the weight is restated here. */
+.coach-hl { font-weight: 700; }
 
 /* ARJ .af-hl-pill (premium:744), tightened for body copy inside .af-about-text
    so it does not disturb leading (premium:1433). */

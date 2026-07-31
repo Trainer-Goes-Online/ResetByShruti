@@ -43,6 +43,28 @@ const TITLE =
 const DESCRIPTION =
   'The 90-day programme for women whose PCOS, thyroid and insulin resistance are all happening at once, backed by a 100% money-back guarantee. A ₹97 call books a 30-minute 1:1 with Shruti.';
 
+/* THE LINK-PREVIEW CARD.
+   Without an explicit og:image, WhatsApp / Instagram / iMessage fall back to
+   scraping the page and picking whatever large image they find first, which
+   here was a client's avatar from the hero cluster: a stranger's face on every
+   shared link. This is a purpose-built 1200x630 brand card.
+
+   Constraints it is built to satisfy:
+     · 1200 x 630 (1.91:1) is the size every platform crops to cleanly
+     · JPEG at 70 KB. WhatsApp routinely fails to generate a preview above
+       roughly 300 KB, which the 441 KB PNG version would have tripped
+     · absolute URL, which metadataBase above resolves the leading slash into.
+       WhatsApp ignores relative og:image paths entirely
+   Scrapers cache aggressively, so after a copy change the file must be
+   re-cut and the URL re-scraped in each platform's debugger. */
+const OG_IMAGE = {
+  url: '/og.jpg',
+  width: 1200,
+  height: 630,
+  type: 'image/jpeg',
+  alt: 'RESET by Shruti Solanki. PCOS, thyroid and insulin resistance, treated together.',
+};
+
 export const metadata = {
   metadataBase: new URL(SITE),
   title: TITLE,
@@ -54,11 +76,14 @@ export const metadata = {
     siteName: 'Reset by Shruti Solanki',
     title: TITLE,
     description: DESCRIPTION,
+    locale: 'en_IN',
+    images: [OG_IMAGE],
   },
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
+    images: [OG_IMAGE.url],
   },
 };
 
