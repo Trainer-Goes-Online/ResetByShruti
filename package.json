@@ -12,5 +12,13 @@
     "next": "16.2.11",
     "react": "19.2.8",
     "react-dom": "19.2.8"
-  }
+  },
+  "//browserslist": "Stops Next shipping polyfills for Array.at / flat / flatMap / Object.fromEntries / Object.hasOwn / trimStart / trimEnd (~26 KB of dead weight plus parse time on a phone). These floors are not a new restriction: globals.css already leans on color-mix(), :has() and text-wrap, so the site never rendered correctly below them anyway. This aligns the JS target with the CSS that was already shipping.",
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 113",
+    "safari >= 16.4",
+    "ios_saf >= 16.4"
+  ]
 }

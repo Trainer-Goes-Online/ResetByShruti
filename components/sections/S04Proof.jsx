@@ -57,9 +57,18 @@ export default function S04Proof() {
             <span className="tphoto">
               {/* Muted, inline, looping preview. iOS Safari does NOT paint a
                   seeked-frame poster from preload=metadata (the clip showed
-                  blank on mobile), but it DOES render muted-inline video —
-                  FunnelEffects plays each only while it is on screen. */}
-              <video src={src} preload="metadata" muted loop autoPlay playsInline />
+                  blank on mobile), but it DOES render muted-inline video, so
+                  FunnelEffects plays each only while it is on screen.
+
+                  ⚠ NO src AND NO autoPlay HERE, deliberately. With both present
+                  the browser began streaming all four clips on first paint,
+                  regardless of the in-view gating, and `loop` kept them
+                  streaming: 66 MB on a mobile trace, which also blew the page
+                  out of the back/forward cache ("an active network connection
+                  received too much data"). The URL rides on data-src and
+                  FunnelEffects promotes it to src the first time the card
+                  enters the viewport. */}
+              <video data-src={src} preload="none" muted loop playsInline />
               <span className="tglass" />
               <span className="tplay"><Ico id="play" /></span>
               <span className="tag ta">Video</span>
