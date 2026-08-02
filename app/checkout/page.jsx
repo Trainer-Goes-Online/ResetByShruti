@@ -1,5 +1,4 @@
 import { Ico } from '@/components/Icons';
-import Price from '@/components/Price';
 import UtilityFooter from '@/components/UtilityFooter';
 import CheckoutForm from './CheckoutForm';
 
