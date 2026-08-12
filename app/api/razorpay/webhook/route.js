@@ -71,7 +71,11 @@ export async function POST(req) {
     firstName: cust.fn, lastName: cust.ln, email: cust.em,
     phone: cust.ph, city: cust.ct, countryCode: cust.co, dialCode: cust.dl,
   };
-  const sig = { fbc: notes.fbc || '', fbp: notes.fbp || '', ip: notes.ip || '', ua: notes.ua || '' };
+  /* fbc should already be set by create-order (cookie or rebuilt from fbclid).
+     Defensive fallback for any order created before that change, or if the note
+     was empty: rebuild from the stored fbclid so Meta still gets a click match. */
+  const fbc = notes.fbc || (notes.clid ? `fb.1.${Math.floor((payment.created_at || Date.now() / 1000) * 1000)}.${notes.clid}` : '');
+  const sig = { fbc, fbp: notes.fbp || '', ip: notes.ip || '', ua: notes.ua || '' };
 
   // Pabbly (non-blocking)
   let pabbly = 'skipped';
@@ -81,7 +85,7 @@ export async function POST(req) {
       const r = await fetch(pabblyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency })),
+        body: JSON.stringify(buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency, fbc })),
       });
       pabbly = r.ok ? 'sent' : 'error';
       console.log(`[webhook] paymentId=${paymentId} Pabbly ${pabbly} (${r.status})`);
@@ -106,7 +110,7 @@ export async function POST(req) {
 }
 
 /* One CRM row per lead. Field names are the stable contract Pabbly maps on. */
-function buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency }) {
+function buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency, fbc }) {
   const created = payment.created_at ? new Date(payment.created_at * 1000) : new Date();
   const inIST = (opts) => created.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', ...opts });
   return {
@@ -124,13 +128,15 @@ function buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, curr
     dial_code: cust.dl || '',
     amount,
     currency,
-    fbc: notes.fbc || '',
+    fbc: fbc || notes.fbc || '',
     fbp: notes.fbp || '',
     client_ip_address: notes.ip || '',
     client_user_agent: notes.ua || '',
     external_id: sha256(cust.em || ''),
     event_source_url: notes.esu || '',
     fbclid: notes.clid || '',
+    referrer: notes.ref || '',
+    landing_url: notes.lp || '',
     utm_source: utm.s || '',
     utm_medium: utm.m || '',
     utm_campaign: utm.c || '',

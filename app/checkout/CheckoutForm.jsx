@@ -210,22 +210,24 @@ export default function CheckoutForm() {
 
     setLoading(true);
     const customer = buildCustomer();
+    const attr = restoreParams();
 
     /* Meta ic_event — after validation, before create-order. Full PII (9.3 EMQ).
        Non-blocking: a tracking failure must never stop the payment. */
-    try { await fireMetaIcOnce(customer); } catch { /* ignore */ }
+    try { await fireMetaIcOnce(customer, attr); } catch { /* ignore */ }
 
     try {
-      const attr = restoreParams();
       const res = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        // attr carries utm_* + fbclid + referrer + landing_url + ts (click time).
         body: JSON.stringify({
           amount: Number(CONFIG.ENTRY_PRICE) || 97,
           currency: 'INR',
           customer,
           utm: attr,
           fbclid: attr.fbclid || '',
+          fbclidTs: attr.ts || 0,
         }),
       });
       const order = await res.json();

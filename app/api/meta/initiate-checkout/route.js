@@ -8,10 +8,14 @@ import { sendIcEvent } from '@/lib/meta-events';
    the payment. */
 export const runtime = 'nodejs';
 
-function reqSignals(req) {
+function reqSignals(req, { fbclid = '', fbclidTs = 0 } = {}) {
   const xff = req.headers.get('x-forwarded-for') || '';
+  // Prefer Meta's own _fbc cookie; rebuild from fbclid when it's absent so the
+  // ic_event ships a deterministic click match (same lever as the sales event).
+  const fbcCookie = req.cookies.get('_fbc')?.value || '';
+  const fbc = fbcCookie || (fbclid ? `fb.1.${Number(fbclidTs) || Date.now()}.${fbclid}` : '');
   return {
-    fbc: req.cookies.get('_fbc')?.value || '',
+    fbc,
     fbp: req.cookies.get('_fbp')?.value || '',
     ip: xff.split(',')[0].trim() || req.headers.get('x-real-ip') || '',
     ua: req.headers.get('user-agent') || '',
@@ -32,7 +36,7 @@ export async function POST(req) {
   const capi = await sendIcEvent({
     pixelId, accessToken,
     customer,
-    sig: reqSignals(req),
+    sig: reqSignals(req, { fbclid: body.fbclid, fbclidTs: body.fbclidTs }),
     eventSourceUrl: body.eventSourceUrl || '',
     value: Number(CONFIG.ENTRY_PRICE) || 97,
     currency: 'INR',

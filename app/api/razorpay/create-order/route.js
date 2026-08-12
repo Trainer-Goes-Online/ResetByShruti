@@ -36,9 +36,18 @@ export async function POST(req) {
   const xff = req.headers.get('x-forwarded-for') || '';
   const ip = xff.split(',')[0].trim() || req.headers.get('x-real-ip') || '';
   const ua = req.headers.get('user-agent') || '';
-  const fbc = req.cookies.get('_fbc')?.value || '';
   const fbp = req.cookies.get('_fbp')?.value || '';
   const esu = `${CONFIG.CANONICAL_HOST || ''}/checkout`;   // canonical, no query — §5
+
+  /* _fbc is the click identifier Meta uses to attribute the conversion to the
+     EXACT ad click. Prefer Meta's own _fbc cookie (it carries the real subdomain
+     index + timestamp); when it's absent — common on iOS / in-app browsers —
+     rebuild it from the fbclid so CAPI still ships a deterministic click match
+     instead of leaving Meta to guess via view-through. Format: fb.1.<ts>.<fbclid>. */
+  const fbclid = body.fbclid || u.fbclid || '';
+  const fbclidTs = Number(body.fbclidTs) || Number(u.ts) || Date.now();
+  const fbcCookie = req.cookies.get('_fbc')?.value || '';
+  const fbc = fbcCookie || (fbclid ? `fb.1.${fbclidTs}.${fbclid}` : '');
 
   const notes = {
     kind: 'client_funnel',   // universal literal — the webhook's gate
@@ -49,12 +58,14 @@ export async function POST(req) {
     utm: JSON.stringify({
       s: u.source || '', m: u.medium || '', c: u.campaign || '', n: u.content || '', t: u.term || '',
     }),
-    clid: trunc(body.fbclid),
+    clid: trunc(fbclid),
     fbc: trunc(fbc),
     fbp: trunc(fbp),
     ip: trunc(ip, 45),
     ua: trunc(ua),
     esu: trunc(esu, 120),
+    ref: trunc(u.referrer || '', 200),        // where the session actually began
+    lp: trunc(u.landing_url || '', 200),      //  (classifies untagged buyers)
   };
 
   try {
