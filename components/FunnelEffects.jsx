@@ -360,7 +360,17 @@ export default function FunnelEffects() {
           const url = CONFIG.VSL_VIMEO_URL;
           const sep = url.includes('?') ? '&' : '?';
           const f = document.createElement('iframe');
-          f.src = `${url}${sep}autoplay=1&playsinline=1&badge=0&autopause=0&title=0&byline=0&portrait=0&dnt=1`;
+          /* ⚠ DO NOT RE-ADD dnt=1.
+             That parameter is Vimeo's Do Not Track switch: it blocks the player
+             from recording ANY session data, cookies and analytics included.
+             With it set, Vimeo still counted the embed loading (26 impressions,
+             10 unique) but discarded every play, which is why the dashboard
+             read 0 unique viewers and 00:00:00 for both total and average time
+             watched. Removing it is what makes watch-time reporting work.
+
+             Consequence to be aware of: the player now sets Vimeo cookies, so
+             Vimeo belongs in the third-party list on /privacy. */
+          f.src = `${url}${sep}autoplay=1&playsinline=1&badge=0&autopause=0&title=0&byline=0&portrait=0`;
           f.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
           f.setAttribute('allowfullscreen', '');
           f.referrerPolicy = 'strict-origin-when-cross-origin';
