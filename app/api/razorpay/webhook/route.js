@@ -3,6 +3,8 @@ import crypto from 'crypto';
 import { CONFIG } from '@/lib/config';
 import { sha256 } from '@/lib/meta-capi';
 import { sendSalesEvent } from '@/lib/meta-events';
+import { resolveAttribution } from '@/lib/attribution';
+import { hostAllowed } from '@/lib/host-gate';
 
 /* POST /api/razorpay/webhook  —  THE SOLE TRACKING AUTHORITY
    ----------------------------------------------------------------------------
@@ -53,7 +55,12 @@ export async function POST(req) {
     return NextResponse.json({ ok: true, ignored: true, reason: 'kind_mismatch', kind: notes.kind || null });
   }
 
-  // 5 · test-mode gate
+  // 5 · host gate (F8) — a non-canonical deploy must never fire live events
+  if (!hostAllowed(req)) {
+    return NextResponse.json({ ok: true, paymentId, skipped: 'host' });
+  }
+
+  // 5b · test-mode gate
   if (process.env.TRACKING_ENABLED !== 'true') {
     console.log(`[webhook] paymentId=${paymentId} skipped test_mode`);
     return NextResponse.json({ ok: true, paymentId, skipped: 'test_mode' });
@@ -71,11 +78,30 @@ export async function POST(req) {
     firstName: cust.fn, lastName: cust.ln, email: cust.em,
     phone: cust.ph, city: cust.ct, countryCode: cust.co, dialCode: cust.dl,
   };
-  /* fbc should already be set by create-order (cookie or rebuilt from fbclid).
-     Defensive fallback for any order created before that change, or if the note
-     was empty: rebuild from the stored fbclid so Meta still gets a click match. */
-  const fbc = notes.fbc || (notes.clid ? `fb.1.${Math.floor((payment.created_at || Date.now() / 1000) * 1000)}.${notes.clid}` : '');
+
+  /* L6 · re-resolve attribution from the notes so orders created before the
+     capture hardening (or with a lossy note) are repaired here: recover utm_*
+     from the stored referrer/landing_url, and derive fbclid from _fbc when the
+     stored clid was lost. resolveAttribution applies the same precedence chain
+     the create-order route uses. */
+  const resolved = resolveAttribution({
+    cookieAttr: {
+      source: utm.s || '', medium: utm.m || '', campaign: utm.c || '',
+      content: utm.n || '', term: utm.t || '',
+      fbclid: notes.clid || '', ts: Number(notes.ts) || 0,
+      referrer: notes.ref || '', landing_url: notes.lp || '',
+    },
+    referrer: notes.ref || '',
+    landingUrl: notes.lp || '',
+    fbc: notes.fbc || '',
+    now: Math.floor((payment.created_at || Date.now() / 1000) * 1000),
+  });
+  const fbc = notes.fbc || (resolved.fbclid ? `fb.1.${resolved.fbclidTs}.${resolved.fbclid}` : '');
   const sig = { fbc, fbp: notes.fbp || '', ip: notes.ip || '', ua: notes.ua || '' };
+
+  if (resolved.utmSource === 'none' && !resolved.fbclid) {
+    console.error(`[webhook] paymentId=${paymentId} ATTRIBUTION MISSING ${resolved.provenance}`);
+  }
 
   // Pabbly (non-blocking)
   let pabbly = 'skipped';
@@ -85,7 +111,7 @@ export async function POST(req) {
       const r = await fetch(pabblyUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency, fbc })),
+        body: JSON.stringify(buildPabblyPayload({ paymentId, payment, cust, resolved, notes, amount, currency, fbc })),
       });
       pabbly = r.ok ? 'sent' : 'error';
       console.log(`[webhook] paymentId=${paymentId} Pabbly ${pabbly} (${r.status})`);
@@ -109,8 +135,10 @@ export async function POST(req) {
   return NextResponse.json({ ok: true, paymentId, kind: 'client_funnel', pabbly, capi });
 }
 
-/* One CRM row per lead. Field names are the stable contract Pabbly maps on. */
-function buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, currency, fbc }) {
+/* One CRM row per lead. Field names are the stable contract Pabbly maps on.
+   utm_* + fbclid come from the RESOLVED attribution (L6 repair), not the raw
+   notes, so referrer-recovered UTMs and _fbc-derived fbclids reach the sheet. */
+function buildPabblyPayload({ paymentId, payment, cust, resolved, notes, amount, currency, fbc }) {
   const created = payment.created_at ? new Date(payment.created_at * 1000) : new Date();
   const inIST = (opts) => created.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', ...opts });
   return {
@@ -134,14 +162,14 @@ function buildPabblyPayload({ paymentId, payment, cust, utm, notes, amount, curr
     client_user_agent: notes.ua || '',
     external_id: sha256(cust.em || ''),
     event_source_url: notes.esu || '',
-    fbclid: notes.clid || '',
-    referrer: notes.ref || '',
-    landing_url: notes.lp || '',
-    utm_source: utm.s || '',
-    utm_medium: utm.m || '',
-    utm_campaign: utm.c || '',
-    utm_content: utm.n || '',
-    utm_term: utm.t || '',
+    fbclid: resolved.fbclid || '',
+    referrer: resolved.referrer || notes.ref || '',
+    landing_url: resolved.landingUrl || notes.lp || '',
+    utm_source: resolved.utm.source || '',
+    utm_medium: resolved.utm.medium || '',
+    utm_campaign: resolved.utm.campaign || '',
+    utm_content: resolved.utm.content || '',
+    utm_term: resolved.utm.term || '',
     purchase_event_id: paymentId,
     is_test: String(process.env.TRACKING_ENABLED !== 'true'),
   };

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { CONFIG } from '@/lib/config';
 import { sendIcEvent } from '@/lib/meta-events';
+import { hostAllowed } from '@/lib/host-gate';
 
 /* POST /api/meta/initiate-checkout — fired from the checkout submit handler
    AFTER client validation passes and BEFORE create-order. Body: {customer,
@@ -24,6 +25,7 @@ function reqSignals(req, { fbclid = '', fbclidTs = 0 } = {}) {
 
 export async function POST(req) {
   if (process.env.TRACKING_ENABLED !== 'true') return NextResponse.json({ ok: true, skipped: 'test_mode' });
+  if (!hostAllowed(req)) return NextResponse.json({ ok: true, skipped: 'host' });   // F8
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
   if (!pixelId || !accessToken) return NextResponse.json({ ok: true, skipped: 'env_missing' });

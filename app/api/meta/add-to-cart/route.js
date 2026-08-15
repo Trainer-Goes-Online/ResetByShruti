@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { CONFIG } from '@/lib/config';
 import { sendAtcEvent } from '@/lib/meta-events';
+import { hostAllowed } from '@/lib/host-gate';
 
 /* POST /api/meta/add-to-cart — fired by a sendBeacon on the FIRST landing-CTA
    click of the browser's lifetime. No customer PII at this point; ships raw
@@ -19,6 +20,7 @@ function reqSignals(req) {
 
 export async function POST(req) {
   if (process.env.TRACKING_ENABLED !== 'true') return NextResponse.json({ ok: true, skipped: 'test_mode' });
+  if (!hostAllowed(req)) return NextResponse.json({ ok: true, skipped: 'host' });   // F8
   const pixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const accessToken = process.env.META_CAPI_ACCESS_TOKEN;
   if (!pixelId || !accessToken) return NextResponse.json({ ok: true, skipped: 'env_missing' });

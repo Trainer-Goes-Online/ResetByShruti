@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { CONFIG } from '@/lib/config';
+import { ATTR_COOKIE, readAttrCookie, resolveAttribution, packJsonNote } from '@/lib/attribution';
 
 /* POST /api/razorpay/create-order
    ----------------------------------------------------------------------------
@@ -37,35 +38,59 @@ export async function POST(req) {
   const ip = xff.split(',')[0].trim() || req.headers.get('x-real-ip') || '';
   const ua = req.headers.get('user-agent') || '';
   const fbp = req.cookies.get('_fbp')?.value || '';
+  const fbcCookie = req.cookies.get('_fbc')?.value || '';
   const esu = `${CONFIG.CANONICAL_HOST || ''}/checkout`;   // canonical, no query — §5
 
-  /* _fbc is the click identifier Meta uses to attribute the conversion to the
-     EXACT ad click. Prefer Meta's own _fbc cookie (it carries the real subdomain
-     index + timestamp); when it's absent — common on iOS / in-app browsers —
-     rebuild it from the fbclid so CAPI still ships a deterministic click match
-     instead of leaving Meta to guess via view-through. Format: fb.1.<ts>.<fbclid>. */
-  const fbclid = body.fbclid || u.fbclid || '';
-  const fbclidTs = Number(body.fbclidTs) || Number(u.ts) || Date.now();
-  const fbcCookie = req.cookies.get('_fbc')?.value || '';
-  const fbc = fbcCookie || (fbclid ? `fb.1.${fbclidTs}.${fbclid}` : '');
+  /* L2 · server reads the reset_attr cookie (written at the edge by middleware.js
+     BEFORE any JS ran — the fix for the in-app-browser hydration race). The
+     client body is only a supplement. resolveAttribution then applies the
+     precedence chain (URL→cookie→body→referrer→_fbc→none), recovers utm_* from
+     the referrer when all are blank (L3), and derives fbclid+click-ts (L4). */
+  const cookieAttr = readAttrCookie(req.cookies.get(ATTR_COOKIE)?.value);
+  const bodyAttr = {
+    source: u.source || '', medium: u.medium || '', campaign: u.campaign || '',
+    content: u.content || '', term: u.term || '', gclid: u.gclid || '',
+    fbclid: body.fbclid || u.fbclid || '',
+    ts: Number(body.fbclidTs) || Number(u.ts) || 0,
+    referrer: u.referrer || '', landing_url: u.landing_url || '',
+  };
+  const resolved = resolveAttribution({
+    cookieAttr, bodyAttr,
+    referrer: bodyAttr.referrer || cookieAttr.referrer || '',
+    landingUrl: bodyAttr.landing_url || cookieAttr.landing_url || '',
+    fbc: fbcCookie,
+  });
+
+  /* _fbc is the click identifier Meta attributes on. Prefer Meta's own cookie;
+     else rebuild fb.1.<ts>.<fbclid> from the resolved fbclid (F4). */
+  const fbc = fbcCookie || (resolved.fbclid ? `fb.1.${resolved.fbclidTs}.${resolved.fbclid}` : '');
+
+  if (resolved.utmSource === 'none' && !resolved.fbclid) {
+    console.error('[create-order] ATTRIBUTION MISSING — no utm, no fbclid, no referrer recovery');
+  }
 
   const notes = {
     kind: 'client_funnel',   // universal literal — the webhook's gate
-    cust: JSON.stringify({
+    // L5 · packJsonNote guarantees valid JSON under 256 by shortening the LONGEST
+    // value — never truncate(JSON.stringify()), which slices mid-JSON and a long
+    // campaign name would drop EVERY field (or 502 the order).
+    cust: packJsonNote({
       fn: c.firstName || '', ln: c.lastName || '', em: c.email || '',
       ph: c.phone || '', ct: c.city || '', co: c.countryCode || '', dl: c.dialCode || '',
     }),
-    utm: JSON.stringify({
-      s: u.source || '', m: u.medium || '', c: u.campaign || '', n: u.content || '', t: u.term || '',
+    utm: packJsonNote({
+      s: resolved.utm.source, m: resolved.utm.medium, c: resolved.utm.campaign,
+      n: resolved.utm.content, t: resolved.utm.term,
     }),
-    clid: trunc(fbclid),
+    clid: trunc(resolved.fbclid),
+    ts: trunc(String(resolved.fbclidTs || '')),
     fbc: trunc(fbc),
     fbp: trunc(fbp),
     ip: trunc(ip, 45),
     ua: trunc(ua),
     esu: trunc(esu, 120),
-    ref: trunc(u.referrer || '', 200),        // where the session actually began
-    lp: trunc(u.landing_url || '', 200),      //  (classifies untagged buyers)
+    ref: trunc(resolved.referrer, 200),       // where the session actually began
+    lp: trunc(resolved.landingUrl, 200),      //  (classifies untagged buyers)
   };
 
   try {
