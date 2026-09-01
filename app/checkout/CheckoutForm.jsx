@@ -112,6 +112,13 @@ export default function CheckoutForm() {
   const [couponOpen, setCouponOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState('');
   const [loading, setLoading] = useState(false);
+  /* Booking-awareness gate. Payment here is only step one: Razorpay hands the
+     buyer back to /book-a-call to pick a slot. Buyers who close the tab on the
+     "payment successful" screen have paid and booked nothing, which reads to
+     them as paying for nothing. The tick is an expectation-setting device, so
+     it starts false every load and is deliberately NOT persisted. */
+  const [consent, setConsent] = useState(false);
+  const [consentError, setConsentError] = useState(false);
   const flagBoxRef = useRef(null);
 
   /* Pricing — ₹999 anchor → ₹97, with derived savings + % OFF (ARJ formula). */
@@ -203,8 +210,19 @@ export default function CheckoutForm() {
     setTouched(allTouched);
 
     const firstBad = KEYS.find((k) => !validateField(k, form[k]));
+    if (!consent) setConsentError(true);
+
     if (firstBad) {
       document.getElementById(`f-${firstBad}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    /* The consent gate sits AFTER field validation so the visitor is sent to
+       one problem at a time, and BEFORE setLoading/create-order so the Razorpay
+       modal never opens un-consented. GA4 initiate_checkout has already fired
+       above: this blocks the payment, not the intent signal. */
+    if (!consent) {
+      document.getElementById('co-consent')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
@@ -379,6 +397,23 @@ export default function CheckoutForm() {
               </div>
             </div>
 
+            {/* Booking-awareness notice. Sits above the fields so the
+                expectation is set before any effort is invested, not after.
+                i-clock from the shared icon family rather than an emoji: emoji
+                render in the OS colour font, so they ignore the brand entirely
+                and look different on every device. */}
+            <div className="co-notice" role="note">
+              <span className="co-notice-icon" aria-hidden="true">
+                <Ico id="clock" className="ico" />
+              </span>
+              <p className="co-notice-text">
+                <strong>Important: please don’t close this page after paying.</strong>{' '}
+                The moment your payment succeeds, wait about <strong>2 minutes</strong> without
+                closing or refreshing. You’ll be taken automatically to the calendar to book your
+                call. Leaving early may stop your booking from being completed.
+              </p>
+            </div>
+
             <div className="co-row">
               <CoField
                 id="fname" label="First Name" placeholder="Priya" autoComplete="given-name"
@@ -510,6 +545,53 @@ export default function CheckoutForm() {
               ))}
             </div>
           </div>
+
+          {/* Consent gate · LAST THING IN THE FORM, deliberately.
+              The obvious home is beside the desktop pay button in the summary
+              aside, but that aside "rides ABOVE the form ≤900px" and the
+              in-flow pay button is display:none on mobile, so the sticky bar is
+              the only button a phone user ever taps. Sitting in the aside put
+              the tick ~500px ABOVE the fields: tapping Pay at the bottom threw
+              the visitor back up past the whole form to find it.
+
+              At the foot of the form it is the last thing before the sticky bar
+              on mobile, and the natural end of what you fill in on desktop,
+              with the pay button alongside it in the right rail.
+
+              The real <input> stays in the DOM for keyboard and AT users and
+              the whole row is a <label>, so tapping anywhere toggles it. The
+              painted box is .co-consent-mark carrying the shared i-check icon,
+              because a native checkbox cannot be themed to the brand
+              consistently across browsers. */}
+          <label
+            id="co-consent"
+            className={`co-consent${consentError ? ' err' : ''}`}
+          >
+            <input
+              type="checkbox"
+              className="co-consent-box"
+              checked={consent}
+              aria-invalid={consentError || undefined}
+              aria-describedby={consentError ? 'co-consent-msg' : undefined}
+              onChange={(e) => {
+                setConsent(e.target.checked);
+                if (e.target.checked) setConsentError(false);
+              }}
+            />
+            <span className="co-consent-mark" aria-hidden="true">
+              <Ico id="check" className="ico" />
+            </span>
+            <span className="co-consent-text">
+              I understand that after a successful payment I’ll be taken to book my call, and
+              I’ll keep this page open for up to <strong>2 minutes</strong> to finish.
+            </span>
+          </label>
+          {consentError && (
+            <p className="co-consent-msg" id="co-consent-msg" role="alert">
+              <Ico id="x" className="ico" />
+              <span>Please confirm you’ll wait for the redirect to book your call.</span>
+            </p>
+          )}
         </form>
 
         {/* ═══ RIGHT · ORDER SUMMARY (rides ABOVE the form ≤900px) ════════ */}
