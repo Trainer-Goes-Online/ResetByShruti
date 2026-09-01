@@ -5352,3 +5352,136 @@ body.locked { overflow: hidden; }
 }
 .legal-cc-t { display: block; font-weight: 700; color: var(--ink); font-size: 15px; }
 .legal-cc-s { display: block; margin-top: 3px; font-size: 13.5px; color: var(--ink-soft); }
+
+
+/* ============================================================================
+   CHECKOUT · BOOKING-AWARENESS NOTICE + CONSENT GATE
+   ----------------------------------------------------------------------------
+   Payment on this page is step one of two: Razorpay returns the buyer to
+   /book-a-call to pick a slot. Buyers who close the tab on the success screen
+   have paid and booked nothing. These two blocks set that expectation before
+   the payment rather than after it.
+
+   Every value below resolves to a token this page already uses — --brand,
+   --co-danger (the same red the field errors use), --radius-m, --ink-soft — so
+   nothing new enters the palette and both blocks read as native furniture.
+   ========================================================================== */
+
+/* ── The notice ─────────────────────────────────────────────────────────── */
+.co-page .co-notice {
+  display: flex; align-items: flex-start; gap: 11px;
+  margin: 0 0 22px; padding: 14px 16px;
+  background: color-mix(in srgb, var(--brand) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand) 28%, transparent);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-m);
+}
+
+.co-page .co-notice-icon {
+  flex: 0 0 auto; display: inline-flex; margin-top: 1px; color: var(--brand);
+}
+.co-page .co-notice-icon .ico { width: 18px; height: 18px; }
+
+.co-page .co-notice-text {
+  margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
+.co-page .co-notice-text strong { color: var(--brand-deep); font-weight: 700; }
+
+/* ── The consent row ────────────────────────────────────────────────────── */
+.co-page .co-consent {
+  display: flex; align-items: flex-start; gap: 11px;
+  margin: 0 0 16px; padding: 13px 15px;
+  background: color-mix(in srgb, var(--brand) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.co-page .co-consent:hover { border-color: var(--brand); }
+
+/* The native input is kept in the DOM (keyboard + AT) but not painted: it is
+   the .co-consent-mark beside it that is drawn, so the control matches the
+   brand instead of the OS accent colour. Never display:none — that would take
+   it out of the tab order and off the accessibility tree. */
+.co-page .co-consent-box {
+  position: absolute; opacity: 0; width: 1px; height: 1px;
+  margin: 0; pointer-events: none;
+}
+
+.co-page .co-consent-mark {
+  flex: 0 0 auto; width: 22px; height: 22px; margin-top: 1px;
+  display: inline-grid; place-items: center;
+  background: #fff;
+  border: 1.5px solid color-mix(in srgb, var(--brand) 45%, transparent);
+  border-radius: 6px;
+  transition: background .18s, border-color .18s;
+}
+.co-page .co-consent-mark .ico {
+  width: 14px; height: 14px; stroke-width: 3;
+  color: #fff; opacity: 0; transform: scale(.6);
+  transition: opacity .18s, transform .18s var(--ease-btn);
+}
+
+.co-page .co-consent-box:checked + .co-consent-mark {
+  background: var(--brand); border-color: var(--brand);
+}
+.co-page .co-consent-box:checked + .co-consent-mark .ico {
+  opacity: 1; transform: scale(1);
+}
+
+/* Focus has to live on the drawn box, since the real input is invisible. */
+.co-page .co-consent-box:focus-visible + .co-consent-mark {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.co-page .co-consent-text {
+  font-size: 13px; line-height: 1.5; color: var(--ink-soft);
+  overflow-wrap: break-word;
+}
+.co-page .co-consent-text strong { color: var(--brand-deep); font-weight: 700; }
+
+/* ── Error state · reuses the field-error red, not a new one ────────────── */
+.co-page .co-consent.err {
+  background: var(--co-danger-soft);
+  border-color: var(--co-danger);
+  animation: coConsentShake .4s ease;
+}
+.co-page .co-consent.err .co-consent-mark { border-color: var(--co-danger); }
+
+@keyframes coConsentShake {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(-4px); }
+  75%      { transform: translateX(4px); }
+}
+
+.co-page .co-consent-msg {
+  display: flex; align-items: center; gap: 6px;
+  margin: -8px 0 16px;
+  font-size: 12.5px; font-weight: 700; color: var(--co-danger);
+}
+.co-page .co-consent-msg .ico { width: 14px; height: 14px; stroke-width: 2.3; flex: 0 0 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .co-page .co-consent.err { animation: none; }
+  .co-page .co-consent-mark,
+  .co-page .co-consent-mark .ico { transition: none; }
+}
+
+/* ── Small screens · tighter padding, bigger tap target ─────────────────── */
+@media (max-width: 480px) {
+  .co-page .co-notice { padding: 12px 13px; margin-bottom: 18px; gap: 9px; }
+  .co-page .co-notice-text { font-size: 12.5px; }
+  .co-page .co-notice-icon .ico { width: 16px; height: 16px; }
+
+  .co-page .co-consent { padding: 12px 13px; gap: 10px; }
+  .co-page .co-consent-text { font-size: 12.5px; }
+  /* 24px keeps the drawn box a comfortable target once the label row is the
+     real hit area anyway. */
+  .co-page .co-consent-mark { width: 24px; height: 24px; }
+}
+
+/* The consent now closes the form rather than sitting in the summary aside, so
+   it needs the top margin the card stack would otherwise have given it. */
+.co-page #co-form > .co-consent { margin-top: 18px; }
