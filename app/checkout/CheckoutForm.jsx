@@ -407,10 +407,11 @@ export default function CheckoutForm() {
                 <Ico id="clock" className="ico" />
               </span>
               <p className="co-notice-text">
-                <strong>Important: please don’t close this page after paying.</strong>{' '}
-                The moment your payment succeeds, wait about <strong>2 minutes</strong> without
-                closing or refreshing. You’ll be taken automatically to the calendar to book your
-                call. Leaving early may stop your booking from being completed.
+                <strong>Important: Please don’t close this page after paying.</strong>{' '}
+                The moment your payment succeeds, please wait up to <strong>10 seconds</strong> without
+                closing or refreshing this tab. You’ll then be automatically taken to the calendar to
+                select your preferred date and time and book your call. Leaving early may stop your
+                booking from being completed.
               </p>
             </div>
 
@@ -582,14 +583,14 @@ export default function CheckoutForm() {
               <Ico id="check" className="ico" />
             </span>
             <span className="co-consent-text">
-              I understand that after a successful payment I’ll be taken to book my call, and
-              I’ll keep this page open for up to <strong>2 minutes</strong> to finish.
+              I understand that after payment, I’ll wait up to <strong>10 seconds</strong> for the
+              booking page to open, then select my preferred date and time to book my call.
             </span>
           </label>
           {consentError && (
             <p className="co-consent-msg" id="co-consent-msg" role="alert">
               <Ico id="x" className="ico" />
-              <span>Please confirm you’ll wait for the redirect to book your call.</span>
+              <span>Please confirm you’ll stay on this page for up to <strong>10 seconds</strong> to complete your call booking.</span>
             </p>
           )}
         </form>
