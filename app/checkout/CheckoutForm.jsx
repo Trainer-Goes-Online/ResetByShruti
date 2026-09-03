@@ -628,13 +628,13 @@ export default function CheckoutForm() {
                 <div className={`co-prod-more${detailsOpen ? ' on' : ''}`} id="co-prod-more">
                   <div className="co-prod-more-inner">
                     <p className="co-more-eyebrow">
-                      Personalised consultation · {CONFIG.CALL_MINUTES} min · Refundable
+                      Personalised consultation · {CONFIG.CALL_MINUTES} min
                     </p>
                     {/* COPY.md · PAGE 2 — these three, in this order. Item 2 is
                         the highest-leverage line on the page. */}
                     <ul className="co-more-list">
                       <li>Personalised <strong>Hormone Diagnosis &amp; {CONFIG.PROGRAMME_DAYS}-Day Reset Roadmap</strong></li>
-                      <li>An honest fit check — <strong>if Reset isn’t right for you, Shruti will say so and refund your {nowStr}</strong></li>
+                      <li>An honest fit check — <strong>if Reset isn’t right for you, Shruti will tell you directly</strong></li>
                       <li>A walk-through of the <strong>{CONFIG.PROGRAMME_WEEKS}-week programme</strong> and your path forward</li>
                     </ul>
                   </div>
@@ -665,7 +665,6 @@ export default function CheckoutForm() {
             <ul className="co-paytrust">
               <li><Ico id="lock" className="ico" /> 256-bit SSL</li>
               <li><Ico id="shield" className="ico" /> PCI Compliant</li>
-              <li><Ico id="check" className="ico" /> {nowStr} Fully Refundable</li>
             </ul>
           </div>
         </aside>
