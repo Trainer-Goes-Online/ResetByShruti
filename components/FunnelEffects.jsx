@@ -374,7 +374,7 @@ export default function FunnelEffects() {
           f.allow = 'autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share';
           f.setAttribute('allowfullscreen', '');
           f.referrerPolicy = 'strict-origin-when-cross-origin';
-          f.title = 'Reset by Shruti Solanki — watch the short video';
+          f.title = 'Reset by Shruti Solanki: watch the short video';
           frame.appendChild(f);
           facade.remove();               // reveal the player (Vimeo controls now show)
           trackGa4Once('video_play');    // once per browser, on OUR play button

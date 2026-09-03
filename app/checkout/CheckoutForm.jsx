@@ -367,7 +367,7 @@ export default function CheckoutForm() {
                 </svg>
               </span>
               <span className="co-offer-applied-text">
-                <b>{CONFIG.OFFER_CODE}</b> applied — saving {fmt(savings)}
+                <b>{CONFIG.OFFER_CODE}</b> applied, saving {fmt(savings)}
               </span>
             </div>
 
@@ -634,7 +634,7 @@ export default function CheckoutForm() {
                         the highest-leverage line on the page. */}
                     <ul className="co-more-list">
                       <li>Personalised <strong>Hormone Diagnosis &amp; {CONFIG.PROGRAMME_DAYS}-Day Reset Roadmap</strong></li>
-                      <li>An honest fit check — <strong>if Reset isn’t right for you, Shruti will tell you directly</strong></li>
+                      <li>An honest fit check: <strong>if Reset isn’t right for you, Shruti will tell you directly</strong></li>
                       <li>A walk-through of the <strong>{CONFIG.PROGRAMME_WEEKS}-week programme</strong> and your path forward</li>
                     </ul>
                   </div>
